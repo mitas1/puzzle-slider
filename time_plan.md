@@ -1,36 +1,38 @@
-<h1>HERNA LOGIKA</h1>
-<ul>
-<li>navrh architektury 2h  	</li>	
-<li>gamestate 2h 	</li>			
-<li>generovanie novej hry 2h	</li>	
-<li>kontrola konca hry 2h		</li>	
-<li>tah 2h				</li>	
-<li>save&load 2h		</li>		
-<li>pocitadlo casu&tahov 2h</li>	
-</ul>
+# TIME PLAN
 
-<h1>GUI</h1>
-<ul>
-<li>navrh GUI 2h		</li>		
-<li>herna plocha 2h		</li>		
-<li>herne policka 2h		</li>	
-<li>menu 2h			</li>		
-<li>animacie 2h		</li>		
-<li>zvuk 2h	</li>	
-</ul>
+## HERNA LOGIKA
 
-<h1>CONTROL</h1>
-<ul>
-<li>mouse eventy 2h</li>	
-<li>button eventy 2h</li>	
-<li>invalidate() 2h</li>	
-</ul>
+* navrh architektury 2h  	
+* gamestate 2h 				
+* generovanie novej hry 2h	
+* kontrola konca hry 2h	
+* tah 2h	
+* save&load 2h	
+* pocitadlo casu&tahov 2h
 
-<h2>CORE</h2>
+
+## GUI
+
+* navrh GUI 2h			
+* herna plocha 2h				
+* herne policka 2h		
+* menu 2h		
+* animacie 2h		
+* zvuk 2h
+
+
+## CONTROL
+
+* mouse eventy 2h	
+* button eventy 2h
+* invalidate() 2h
+
+
+## CORE
 navrh architekrury, gamestate, tah, generovanie, kontrola konca hry, (konzolove ovladanie)
 
-<h2>ADVANCED</h2>
+## ADVANCED
 navrh GUI, herna plocha, menu, herne policka, mouse eventy, button eventy, invalidate
 
-<h2>FANCY</h2>
+## FANCY
 save&load, pocitadldo, zvuk, animacia
