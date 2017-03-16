@@ -12,16 +12,27 @@ public class GameState implements Serializable {
 	protected int[][] mTiles;
 	protected int mState;
 	protected int mSize;
-	
-	
+
+
 	public GameState(int size) throws InvalidArgumentException{
 		if (size < 4) {
 			throw new InvalidArgumentException();
 		}
 		mState = Constants.GS_UNINITIALIZED;
 		mSize = size;
+		initialize();
 	}
-	
+
+	public void initialize(){
+		mTiles = new int[mSize][mSize];
+		for (int row = 0; row < mTiles.length; row++) {
+			for (int col = 0; col < mTiles.length; col++) {
+				mTiles[row][col] = row*mSize + col + 1;
+			}
+		}
+		mTiles[mSize-1][mSize-1] = 0;
+	}
+
 	@Override
 	public String toString() {
 		if(mState == Constants.GS_UNINITIALIZED){
@@ -33,16 +44,16 @@ public class GameState implements Serializable {
 	public int[][] getmTiles() {
 		return mTiles;
 	}
-	
+
 	public int getSpecificTile(int row, int col) throws UnitionalizedGameException, InvalidArgumentException{
 		if(mState == Constants.GS_UNINITIALIZED){
 			throw new UnitionalizedGameException();
 		}
-		
+
 		if (row >= mSize || col >= mSize) {
 			throw new InvalidArgumentException();
 		}
-		
+
 		return mTiles[row][col];
 	}
 
@@ -53,7 +64,7 @@ public class GameState implements Serializable {
 	public void setmState(int mState) {
 		this.mState = mState;
 	}
-	
+
 	public int getmSize() {
 		return mSize;
 	}
