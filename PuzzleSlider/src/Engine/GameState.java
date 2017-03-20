@@ -22,8 +22,13 @@ public class GameState implements Serializable {
 		mSize = size;
 		initialize();
 	}
+	
+	
+	public void switchTiles(int firstRow, int firstCol, int secondRow, int secondCol){
+//		TODO
+	}
 
-	public void initialize(){
+	private void initialize(){
 		mTiles = new int[mSize][mSize];
 		for (int row = 0; row < mTiles.length; row++) {
 			for (int col = 0; col < mTiles.length; col++) {
@@ -32,6 +37,7 @@ public class GameState implements Serializable {
 		}
 		mTiles[mSize-1][mSize-1] = 0;
 	}
+	
 
 	@Override
 	public String toString() {

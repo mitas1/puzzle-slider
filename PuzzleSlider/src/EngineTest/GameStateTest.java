@@ -30,6 +30,7 @@ public class GameStateTest{
 	@Test
 	public void validContstructorTest() throws InvalidArgumentException{
 		GameState gameState = new GameState(4);
+		assertEquals(4, gameState.getmSize());
 		gameState = new GameState(15);
 		assertEquals(15, gameState.getmSize());
 	}
