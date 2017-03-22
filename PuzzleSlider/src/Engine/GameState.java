@@ -20,15 +20,22 @@ public class GameState implements Serializable {
 		}
 		mState = Constants.GS_UNINITIALIZED;
 		mSize = size;
-		initialize();
 	}
 	
 	
-	public void switchTiles(int firstRow, int firstCol, int secondRow, int secondCol){
-//		TODO
+	public void switchTiles(int firstRow, int firstCol, int secondRow, int secondCol)  throws UnitionalizedGameException, InvalidArgumentException{
+		if(mState == Constants.GS_UNINITIALIZED){
+			throw new UnitionalizedGameException();
+		}
+		if (firstRow >= mSize || firstCol >= mSize || secondCol >= mSize || secondRow >= mSize) {
+			throw new InvalidArgumentException();
+		}
+		int tmp = mTiles[firstRow][firstCol];
+		mTiles[firstRow][firstCol] = mTiles[secondRow][secondCol];
+		mTiles[secondRow][secondCol] = tmp;
 	}
 
-	private void initialize(){
+	public void initialize(){
 		mTiles = new int[mSize][mSize];
 		for (int row = 0; row < mTiles.length; row++) {
 			for (int col = 0; col < mTiles.length; col++) {
@@ -36,15 +43,22 @@ public class GameState implements Serializable {
 			}
 		}
 		mTiles[mSize-1][mSize-1] = 0;
+		mState = Constants.GS_IN_PROGRESS;
 	}
 	
 
 	@Override
 	public String toString() {
 		if(mState == Constants.GS_UNINITIALIZED){
-			return "GAME NOT INITIONALIZED.";
+			return "GAME NOT INITIONALIZED";
 		}
-		return Arrays.deepToString(mTiles);
+		StringBuffer out = new StringBuffer();
+		for (int i = 0; i < mTiles.length; i++) {
+//			TODO rework with String.format() to make it 'clean' looking
+			out.append( Arrays.toString(mTiles[i]));
+			out.append(System.lineSeparator());
+		}
+		return out.toString();
 	}
 
 	public int[][] getmTiles() {
