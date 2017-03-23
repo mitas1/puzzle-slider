@@ -10,18 +10,9 @@ import Engine.GameState;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UnitionalizedGameException;
 
-public class GameStateTest{
+public class GameStateTest extends GameState{
 
 
-	@Before
-	public void init(){
-
-	}
-
-	@After
-	public void cleanUp(){
-
-	}
 
 	@Test(expected = InvalidArgumentException.class) 
 	public void invalidConvstructorTest() throws InvalidArgumentException{
@@ -68,6 +59,9 @@ public class GameStateTest{
 		assertEquals(1, gameState.getSpecificTile(0, 0));
 		gameState.switchTiles(0, 0, 0, 1);
 		assertEquals(2, gameState.getSpecificTile(0, 0));
+		gameState.switchTiles(0, 1, 0, 2);
+		assertEquals(1, gameState.getSpecificTile(0, 2));
+		
 	}
 	
 	

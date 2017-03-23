@@ -12,6 +12,11 @@ public class GameState implements Serializable {
 	protected int[][] mTiles;
 	protected int mState;
 	protected int mSize;
+	
+	
+	public GameState() {
+		//not used}
+	}
 
 
 	public GameState(int size) throws InvalidArgumentException{
