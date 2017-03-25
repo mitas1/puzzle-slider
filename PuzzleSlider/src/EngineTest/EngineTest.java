@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import Engine.Engine;
 import ExceptionHandling.InvalidArgumentException;
-import ExceptionHandling.UnitionalizedGameException;
+import ExceptionHandling.UninitializedGameException;
 
 public class EngineTest extends Engine{
 	
@@ -26,7 +26,7 @@ public class EngineTest extends Engine{
 	}
 	
 	@Test
-	public void findEmptyTileTest() throws InvalidArgumentException, UnitionalizedGameException{
+	public void findEmptyTileTest() throws InvalidArgumentException, UninitializedGameException{
 		EngineTest engineTest = new EngineTest();
 		int[] tileCoords = engineTest.findEmptySurroundingTile(0, 0);
 		assertNull(tileCoords);
