@@ -3,7 +3,7 @@ package Engine;
 public class Globals {
 	// TODO: move to global package
 	
-	public static class GridPoint {
+	public static class GridPoint implements Comparable<GridPoint> {
 		public int row;
 		public int column;
 		
@@ -11,6 +11,12 @@ public class Globals {
 			row = r;
 			column = c;
 		}
+
+		@Override
+		public int compareTo(GridPoint o) {
+			return ( row - o.row ) + ( column - o.column );
+		}
+		
 	}
 	
 	public static enum GameState {

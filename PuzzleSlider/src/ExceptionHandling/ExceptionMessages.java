@@ -1,5 +1,7 @@
 package ExceptionHandling;
 
+import java.lang.String;
+
 public class ExceptionMessages {
 
 	public static String GameDimensions( int dims ) {

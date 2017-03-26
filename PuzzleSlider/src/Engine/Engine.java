@@ -33,11 +33,11 @@ public class Engine {
 	
 	protected boolean move( GridPoint point ) {
 		try {
-			int selectedTile = mGameData.getTile( point.row, point.column );
+			int selectedTile = mGameData.getTile( point );
 			if ( selectedTile > 0 ) {
 				GridPoint emptyTile = findEmptyTileAround( point );
 				if ( emptyTile != null ) {
-					mGameData.switchTiles( emptyTile.row, emptyTile.column, point.row, point.column );
+					mGameData.switchTiles( emptyTile, point );
 					return true;
 				}
 			}
