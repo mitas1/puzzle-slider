@@ -11,6 +11,10 @@ import ExceptionHandling.UninitializedGameException;
 public class Engine {
 
 	protected GameData mGameData;
+	
+	protected Engine(){
+		//For Testing purposes
+	}
 
 	public Engine(int size) throws InvalidArgumentException {
 		mGameData = new GameData(size);
