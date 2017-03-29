@@ -60,6 +60,10 @@ public class Engine {
 			}
 		}
 	}
+	
+	public boolean isFinished() {
+		return mGameData.isFinished();
+	}
 
 	protected int getManhattanDistance( GridPoint pt1, GridPoint pt2 ) {
 		GridPoint dist = new GridPoint( pt2.row - pt1.row, pt2.column - pt1.column );

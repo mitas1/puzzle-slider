@@ -57,7 +57,12 @@ public class Controller {
 					if ( !validMove ) {
 						System.out.println("Invalid move");
 					} else {
-						System.out.print(mEngine);
+						if ( mEngine.isFinished() ) {
+							System.out.println("Congratulations!");
+							mEngine = null;
+						} else {
+							System.out.print(mEngine);
+						}
 					}
 				} catch ( NumberFormatException e) {
 					PrintHelp();

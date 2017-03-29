@@ -58,7 +58,7 @@ public class GameData implements Serializable {
 	}
 	
 	protected boolean checkValidPoint( GridPoint point ) {
-		return ( point.row > 0 ) && ( point.row < mSize ) && ( point.column > 0 ) && ( point.column < mSize );
+		return ( point.row >= 0 ) && ( point.row < mSize ) && ( point.column >= 0 ) && ( point.column < mSize );
 	}
 	
 	protected void checkScoreChange( GridPoint posBefore, GridPoint posAfter ) {
@@ -122,5 +122,16 @@ public class GameData implements Serializable {
 	
 	public GridPoint getEmptyTile() {
 		return mBlankSpot;
+	}
+	
+	protected void checkFinished() {
+		if ( mCorrectTiles == (mSize * mSize - 1) ) {
+			mState = GameState.FINISHED;
+		}
+	}
+	
+	public boolean isFinished() {
+		checkFinished();
+		return mState == GameState.FINISHED;
 	}
 }
