@@ -100,4 +100,63 @@ public class EngineTest{
 		assertEquals(2, engine.manhattanDistance(pt0, pt1));
 		assertEquals(5, engine.manhattanDistance(pt0, pt2));
 	}
+	
+	@Test
+	public void manhattanDistanceTest3() throws InvalidArgumentException {
+		EngineOverride engine = new EngineOverride();
+		GridPoint pt0 = new GridPoint(5, 5);
+		
+		assertEquals(0, engine.manhattanDistance(pt0, pt0));
+	}
+	
+	@Test
+	public void ValidMove() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertTrue(engine.moveOverride(new GridPoint(4, 3)));
+	}
+	
+	@Test
+	public void ValidMoveWithCheck() throws InvalidArgumentException, UninitializedGameException{
+		EngineOverride engine = new EngineOverride();
+		assertTrue(engine.moveOverride(new GridPoint(3, 4)));
+		assertEquals(0, engine.getGameData().getTile(new GridPoint(3,4)));
+		assertEquals(20, engine.getGameData().getTile(new GridPoint(4,4)));
+	}
+	
+	@Test
+	public void InvalidMoveOnGrid() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(1, 0)));
+	}
+	
+	@Test
+	public void InvalidMoveDiagonal() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(3, 3)));
+	}
+	
+	@Test
+	public void InvalidMoveToEmpty() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(4, 4)));
+	}
+	
+	@Test
+	public void InvalidMoveAdjacentNotOnGrid() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(4, 5)));
+		assertFalse(engine.moveOverride(new GridPoint(5, 4)));
+	}
+	
+	@Test
+	public void InvalidMoveNotOnGrid() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(12, 3)));
+	}
+	
+	@Test
+	public void InvalidMoveNotOnGrid2() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(12, -47)));
+	}
 }
