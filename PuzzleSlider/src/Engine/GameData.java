@@ -12,7 +12,7 @@ import ExceptionHandling.UninitializedGameException;
 public class GameData implements Serializable {
 
 	private static final long serialVersionUID = 854452780857028700L;
-	private final long MILIARD = 1000000000;
+	private final long BILLION = 1000000000;
 	
 	protected int[][] mTiles;
 	protected GridPoint mBlankSpot;
@@ -151,7 +151,7 @@ public class GameData implements Serializable {
 	}
 	
 	protected long getTimeInSeconds(){
-		return System.nanoTime() / MILIARD;
+		return System.nanoTime() / BILLION;
 	}
 	
 	protected void checkFinished() {
