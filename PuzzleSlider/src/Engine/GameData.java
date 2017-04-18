@@ -12,13 +12,17 @@ import ExceptionHandling.UninitializedGameException;
 public class GameData implements Serializable {
 
 	private static final long serialVersionUID = 854452780857028700L;
-
+	private final long MILIARD = 1000000000;
+	
 	protected int[][] mTiles;
 	protected GridPoint mBlankSpot;
 	protected int mSize;
 	
 	protected GameState mState;
 	protected int mCorrectTiles;
+	
+	protected int mMoveCount;
+	protected long mStartTime;
 	
 	public GameData( int size ) throws InvalidArgumentException {
 		if (size < 4) {
@@ -40,6 +44,10 @@ public class GameData implements Serializable {
 			out.append( Arrays.toString(mTiles[i]));
 			out.append(System.lineSeparator());
 		}
+		out.append("Pocet tahov: " + mMoveCount);
+		out.append(System.lineSeparator());
+		out.append("Cas: " + (getTimeInSeconds() - mStartTime) + " sekund");
+		out.append(System.lineSeparator());
 		return out.toString();
 	}
 	
@@ -55,6 +63,11 @@ public class GameData implements Serializable {
 		mBlankSpot = new GridPoint( mSize-1, mSize-1);
 		mCorrectTiles = mSize * mSize - 1;
 		mState = GameState.IN_PROGRESS;
+	}
+	
+	public void initVariables(){
+		mMoveCount = 0;
+		mStartTime = getTimeInSeconds();
 	}
 	
 	protected boolean checkValidPoint( GridPoint point ) {
@@ -122,6 +135,23 @@ public class GameData implements Serializable {
 	
 	public GridPoint getEmptyTile() {
 		return mBlankSpot;
+	}
+	
+	public int getMoveCount() {
+		return mMoveCount;
+	}
+	
+	public int incrementMoveCount(){
+		mMoveCount++;
+		return mMoveCount;
+	}
+	
+	public long getStartTime(){
+		return mStartTime;
+	}
+	
+	protected long getTimeInSeconds(){
+		return System.nanoTime() / MILIARD;
 	}
 	
 	protected void checkFinished() {

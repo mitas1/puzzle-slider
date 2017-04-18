@@ -20,6 +20,7 @@ public class Engine {
 		mGameData = new GameData(size);
 		mGameData.initialize();
 		shuffleNewGame(1000);
+		mGameData.initVariables();
 	}
 	
 	@Override
@@ -42,6 +43,7 @@ public class Engine {
 				GridPoint emptyTile = findEmptyTileAround( point );
 				if ( emptyTile != null ) {
 					mGameData.switchTiles( emptyTile, point );
+					mGameData.incrementMoveCount();
 					return true;
 				}
 			}
