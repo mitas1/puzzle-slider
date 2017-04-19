@@ -44,9 +44,9 @@ public class GameData implements Serializable {
 			out.append( Arrays.toString(mTiles[i]));
 			out.append(System.lineSeparator());
 		}
-		out.append("Pocet tahov: " + mMoveCount);
+		out.append("Moves: " + mMoveCount);
 		out.append(System.lineSeparator());
-		out.append("Cas: " + (getTimeInSeconds() - mStartTime) + " sekund");
+		out.append("Time: " + (getTimeInSeconds() - mStartTime) + " seconds");
 		out.append(System.lineSeparator());
 		return out.toString();
 	}
@@ -65,7 +65,7 @@ public class GameData implements Serializable {
 		mState = GameState.IN_PROGRESS;
 	}
 	
-	public void initVariables(){
+	public void initCounters(){
 		mMoveCount = 0;
 		mStartTime = getTimeInSeconds();
 	}
@@ -141,9 +141,8 @@ public class GameData implements Serializable {
 		return mMoveCount;
 	}
 	
-	public int incrementMoveCount(){
+	public void incrementMoveCount(){
 		mMoveCount++;
-		return mMoveCount;
 	}
 	
 	public long getStartTime(){

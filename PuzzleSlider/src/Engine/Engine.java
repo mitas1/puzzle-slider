@@ -20,7 +20,7 @@ public class Engine {
 		mGameData = new GameData(size);
 		mGameData.initialize();
 		shuffleNewGame(1000);
-		mGameData.initVariables();
+		mGameData.initCounters();
 	}
 	
 	@Override
