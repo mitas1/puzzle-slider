@@ -15,7 +15,7 @@ public class Controller {
 		System.out.println(" help - prints this help message");
 		System.out.println(" quit - quits the program");
 		System.out.println(" newgame - initialized new 4x4 game");
-		System.out.println(" X Y - make a move, where X, Y are numbers");
+		System.out.println(" X Y - make a move (move empty space to this position), where X (row), Y (column) are numbers");
 	}
 	
 	protected void PrintStartScreen() {
