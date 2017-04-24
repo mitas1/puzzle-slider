@@ -45,7 +45,6 @@ public class Controller {
 			System.out.println("File save.sav cannot be found");
 		} catch (Exception e){
 			System.out.println("This shouldn't happen");
-			e.printStackTrace();
 		}
 	}
 	
