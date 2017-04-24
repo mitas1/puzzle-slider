@@ -1,6 +1,7 @@
 package Engine;
 
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Random;
 
 import Engine.Globals.GameMove;
@@ -12,8 +13,8 @@ public class Engine {
 
 	protected GameData mGameData;
 	
-	protected Engine(){
-		//For Testing purposes
+	public Engine() throws InvalidArgumentException{
+		mGameData = new GameData(4);
 	}
 
 	public Engine(int size) throws InvalidArgumentException {
@@ -44,6 +45,7 @@ public class Engine {
 				if ( emptyTile != null ) {
 					mGameData.switchTiles( emptyTile, point );
 					mGameData.incrementMoveCount();
+					mGameData.updateTimeCount();
 					return true;
 				}
 			}
@@ -70,7 +72,11 @@ public class Engine {
 	public boolean isFinished() {
 		return mGameData.isFinished();
 	}
-
+	
+	public boolean inProgress(){
+		return mGameData.inProgress();
+	}
+	
 	protected int getManhattanDistance( GridPoint pt1, GridPoint pt2 ) {
 		GridPoint dist = new GridPoint( pt2.row - pt1.row, pt2.column - pt1.column );
 		return Math.abs(dist.row) + Math.abs(dist.column);
@@ -84,6 +90,13 @@ public class Engine {
 		
 		return null;
 	}
+	
+	public void saveGame(String fileName) throws FileNotFoundException, IOException{
+		mGameData.saveDataToFile(fileName);
+	}
 
-
+	public void loadGame(String fileName) throws FileNotFoundException, ClassNotFoundException, IOException{
+		GameData loadedGame = mGameData.loadDataFromFile(fileName);
+		mGameData = loadedGame;
+	}
 }

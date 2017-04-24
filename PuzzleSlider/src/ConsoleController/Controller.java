@@ -1,7 +1,7 @@
 package ConsoleController;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
-
 import Engine.Engine;
 import ExceptionHandling.InvalidArgumentException;
 
@@ -15,6 +15,8 @@ public class Controller {
 		System.out.println(" help - prints this help message");
 		System.out.println(" quit - quits the program");
 		System.out.println(" newgame - initialized new 4x4 game");
+		System.out.println(" loadgame - loads previously saved game");
+		System.out.println(" savegame - saves currently played game");
 		System.out.println(" X Y - make a move (move empty space to this position), where X (row), Y (column) are numbers");
 	}
 	
@@ -34,6 +36,36 @@ public class Controller {
 		}
 	}
 	
+	protected void LoadGame(){
+		try {
+			mEngine = new Engine();
+			mEngine.loadGame("save.sav");
+			System.out.println(mEngine);
+		} catch (FileNotFoundException e){
+			System.out.println("File save.sav cannot be found");
+		} catch (Exception e){
+			System.out.println("This shouldn't happen");
+			e.printStackTrace();
+		}
+	}
+	
+	protected void SaveGame(){
+		try{
+			if (mEngine != null){
+				if(mEngine.inProgress()){
+					mEngine.saveGame("save.sav");
+					System.out.println("Saved Successfully");
+				} else {
+					System.out.println("Not initialized game cannot be saved");
+				}
+			} else {
+				System.out.println("No game to be saved");
+			}
+		} catch (Exception e) {
+			System.out.println("This shouldn't happen");
+		}
+	}
+	
 	protected void Process( String input ) {
 		input = input.toLowerCase();
 		switch (input) {
@@ -46,6 +78,12 @@ public class Controller {
 			break;
 		case "newgame":
 			NewGame();
+			break;
+		case "loadgame":
+			LoadGame();
+			break;
+		case "savegame":
+			SaveGame();
 			break;
 		default:
 			String[] nums = input.split(" ");

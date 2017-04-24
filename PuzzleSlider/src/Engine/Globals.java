@@ -1,9 +1,13 @@
 package Engine;
 
+import java.io.Serializable;
+
 public class Globals {
 	// TODO: move to global package
 	
-	public static class GridPoint implements Comparable<GridPoint> {
+	public static class GridPoint implements Comparable<GridPoint>, Serializable {
+		
+		private static final long serialVersionUID = -7640285918433682206L;
 		public int row;
 		public int column;
 		

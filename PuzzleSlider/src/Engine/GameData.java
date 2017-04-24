@@ -1,5 +1,11 @@
 package Engine;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -23,6 +29,7 @@ public class GameData implements Serializable {
 	
 	protected int mMoveCount;
 	protected long mStartTime;
+	protected long mTimeCount;
 	
 	public GameData( int size ) throws InvalidArgumentException {
 		if (size < 4) {
@@ -46,7 +53,7 @@ public class GameData implements Serializable {
 		}
 		out.append("Moves: " + mMoveCount);
 		out.append(System.lineSeparator());
-		out.append("Time: " + (getTimeInSeconds() - mStartTime) + " seconds");
+		out.append("Time: " + mTimeCount + " seconds");
 		out.append(System.lineSeparator());
 		return out.toString();
 	}
@@ -67,6 +74,7 @@ public class GameData implements Serializable {
 	
 	public void initCounters(){
 		mMoveCount = 0;
+		mTimeCount = 0;
 		mStartTime = getTimeInSeconds();
 	}
 	
@@ -125,6 +133,20 @@ public class GameData implements Serializable {
 		return mTiles[coords.row][coords.column];
 	}
 	
+	public void saveDataToFile(String fileName) throws FileNotFoundException, IOException{
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileName));
+		os.writeObject(this);
+		os.close();
+	}
+	
+	public GameData loadDataFromFile(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream is = new ObjectInputStream(new FileInputStream(fileName));
+		GameData loadedData =  (GameData) is.readObject();
+		is.close();
+		loadedData.mStartTime = getTimeInSeconds();
+		return loadedData;
+	}
+	
 	public GameState getState() {
 		return mState;
 	}
@@ -145,6 +167,12 @@ public class GameData implements Serializable {
 		mMoveCount++;
 	}
 	
+	public void updateTimeCount(){
+		long currentTime = getTimeInSeconds();
+		mTimeCount += currentTime - mStartTime;
+		mStartTime = currentTime;
+	}
+	
 	public long getStartTime(){
 		return mStartTime;
 	}
@@ -162,5 +190,9 @@ public class GameData implements Serializable {
 	public boolean isFinished() {
 		checkFinished();
 		return mState == GameState.FINISHED;
+	}
+	
+	public boolean inProgress(){
+		return mState == GameState.IN_PROGRESS;
 	}
 }
