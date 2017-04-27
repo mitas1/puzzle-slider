@@ -118,13 +118,9 @@ public class Renderer {
 
 
 		controller.setMenuButtonListener(menuBtn);
+		
+		drawTiles(tiles);
 
-		GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
-		tilesGraphicsContext.clearRect(0,0,canvasWidth,canvasHeight);
-
-		for (Tile tile: tiles){
-			tile.draw(tilesGraphicsContext);
-		}
 
 		this.root.getChildren().clear();
 		this.root.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
@@ -138,6 +134,16 @@ public class Renderer {
 
 	public void updateTime(String time){
 		this.timeLabel.setText(time);
+	}
+
+
+
+	public void drawTiles(List<Tile> tiles) {
+		GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
+		tilesGraphicsContext.clearRect(0,0,canvasWidth,canvasHeight);
+		for (Tile tile: tiles){
+			tile.draw(tilesGraphicsContext);
+		}
 	}
 
 
