@@ -13,6 +13,7 @@ public class Engine {
 
 	protected GameData mGameData;
 	
+
 	public Engine() throws InvalidArgumentException{
 		mGameData = new GameData(4);
 	}
@@ -98,5 +99,9 @@ public class Engine {
 	public void loadGame(String fileName) throws FileNotFoundException, ClassNotFoundException, IOException{
 		GameData loadedGame = mGameData.loadDataFromFile(fileName);
 		mGameData = loadedGame;
+	}
+	
+	public GameData getGameData() {
+		return mGameData;
 	}
 }

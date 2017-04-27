@@ -9,142 +9,133 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-
-import java.util.ArrayList;
+import java.util.List;
 
 import Controller.PuzzleSlider;
 
 public class Renderer {
-    public static int gameWindowWidth=1024;
-    public static int gameWindowHeight =768;
-    private final int canvasWidth=495;
-    private final int canvasHeight =495;
+	public final int gameWindowWidth=1024;
+	public final int gameWindowHeight =768;
+	public final int canvasWidth=495;
+	public final int canvasHeight =495;
 
-    private final String imagesPath = "resources/images/";
-    private final Image menuBackgroundImage = new Image(imagesPath+"main_background.png");
-    private final Image gameBackgroundImage = new Image(imagesPath+"game_background.png");
+	private final String imagesPath = "resources/images/";
+	private final Image menuBackgroundImage = new Image(imagesPath+"main_background.png");
+	private final Image gameBackgroundImage = new Image(imagesPath+"game_background.png");
 
-    private final int gameCanvasOffsetX = 398;
-    private final int gameCanvasOffsetY = 131;
-    private Pane root;
+	private final int gameCanvasOffsetX = 398;
+	private final int gameCanvasOffsetY = 131;
+	private Pane root;
 
-    Canvas backgroundCanvas,gameCanvas;
+	Canvas backgroundCanvas,gameCanvas;
 
-    Label movesLabel, timeLabel;
+	Label movesLabel, timeLabel;
 
-    Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn;
-    
-    PuzzleSlider controller;
+	Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn;
+
+	PuzzleSlider controller;
 
 
 
-    public Renderer(Stage primaryStage, PuzzleSlider controller){
-    	this.root = new Pane();
+	public Renderer(Stage primaryStage, PuzzleSlider controller){
+		this.root = new Pane();
 		Scene scene = new Scene(root, gameWindowWidth, gameWindowHeight);
 		this.controller = controller;
-        setupMenu();
-        
-        
-        this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
-        this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
-        
+		setupMenu();
+
+
+		this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
+		this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
+
 		showMenu();
 		primaryStage.setScene( scene );
 		primaryStage.show();
 
 
-    }
+	}
 
 
 
-    public void setupMenu(){
-        newGameBtn = new Button("New Game");
-        saveGameBtn = new Button("Save Game");
-        loadGameBtn = new Button("Load Game");
-        quitGameBtn = new Button("Quit Game");
+	public void setupMenu(){
+		newGameBtn = new Button("New Game");
+		saveGameBtn = new Button("Save Game");
+		loadGameBtn = new Button("Load Game");
+		quitGameBtn = new Button("Quit Game");
 
-        newGameBtn.setLayoutX(700);
-        newGameBtn.setLayoutY(140);
-        saveGameBtn.setLayoutX(700);
-        saveGameBtn.setLayoutY(170);
-        loadGameBtn.setLayoutX(700);
-        loadGameBtn.setLayoutY(200);
-        quitGameBtn.setLayoutX(700);
-        quitGameBtn.setLayoutY(530);
-        
-        controller.setNewGameListener(newGameBtn);
-        controller.setSaveGameListener(saveGameBtn);
-        controller.setLoadGameListener(loadGameBtn);
-        controller.setQuitGameListener(quitGameBtn);
-//        other listeneres...
+		newGameBtn.setLayoutX(700);
+		newGameBtn.setLayoutY(140);
+		saveGameBtn.setLayoutX(700);
+		saveGameBtn.setLayoutY(170);
+		loadGameBtn.setLayoutX(700);
+		loadGameBtn.setLayoutY(200);
+		quitGameBtn.setLayoutX(700);
+		quitGameBtn.setLayoutY(530);
 
-    }
+		controller.setNewGameListener(newGameBtn);
+		controller.setSaveGameListener(saveGameBtn);
+		controller.setLoadGameListener(loadGameBtn);
+		controller.setQuitGameListener(quitGameBtn);
+		//        other listeneres...
 
-    public void showMenu(){
-        GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
-        gc.drawImage(menuBackgroundImage,0,0);
+	}
 
-        this.root.getChildren().clear();
-        this.root.getChildren().addAll(backgroundCanvas,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
-    }
+	public void showMenu(){
+		GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
+		gc.drawImage(menuBackgroundImage,0,0);
+
+		this.root.getChildren().clear();
+		this.root.getChildren().addAll(backgroundCanvas,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
+	}
 
 
-    public void loadGameWindow(ArrayList<Tile> tiles){
-        timeLabel = new Label("00:00");
-        movesLabel = new Label("0");
+	public void loadGameWindow(List<Tile> tiles){
+		timeLabel = new Label("00:00");
+		movesLabel = new Label("0");
 
-        timeLabel.setLayoutX(120);
-        timeLabel.setLayoutY(135);
-        timeLabel.setStyle("-fx-font-size: 2em;");
-        timeLabel.setTextFill(Color.WHITE);
-        movesLabel.setLayoutX(120);
-        movesLabel.setLayoutY(180);
-        movesLabel.setStyle("-fx-font-size: 2em;");
-        movesLabel.setTextFill(Color.WHITE);
+		timeLabel.setLayoutX(120);
+		timeLabel.setLayoutY(135);
+		timeLabel.setStyle("-fx-font-size: 2em;");
+		timeLabel.setTextFill(Color.WHITE);
+		movesLabel.setLayoutX(120);
+		movesLabel.setLayoutY(180);
+		movesLabel.setStyle("-fx-font-size: 2em;");
+		movesLabel.setTextFill(Color.WHITE);
 
-        menuBtn = new Button("MENU");
-        int counter =1;
+		menuBtn = new Button("MENU");
 
-        for (int i = 0; i< 4;i++){
-            for (int j=0;j<4;j++){
-                if (counter<16)
-                tiles.add(new Tile(j,i,canvasWidth/4,counter));
-                counter++;
-            }
-        }
-        tiles.add(new Tile(3,3,canvasWidth/4,0));
-        GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
+		GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
 
-        gc.drawImage(gameBackgroundImage,0,0);
+		gc.drawImage(gameBackgroundImage,0,0);
 
-        gameCanvas.setLayoutX(gameCanvasOffsetX);
-        gameCanvas.setLayoutY(gameCanvasOffsetY);
+		gameCanvas.setLayoutX(gameCanvasOffsetX);
+		gameCanvas.setLayoutY(gameCanvasOffsetY);
 
-        menuBtn.setLayoutX(120);
-        menuBtn.setLayoutY(340);
-        
-        
-        controller.setMenuButtonListener(menuBtn);
+		menuBtn.setLayoutX(120);
+		menuBtn.setLayoutY(340);
 
-        GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
-        tilesGraphicsContext.clearRect(0,0,canvasWidth,canvasHeight);
 
-        for (Tile tile: tiles){
-            tile.draw(tilesGraphicsContext);
-        }
+		controller.setMenuButtonListener(menuBtn);
 
-        this.root.getChildren().clear();
-        this.root.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
-    }
+		GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
+		tilesGraphicsContext.clearRect(0,0,canvasWidth,canvasHeight);
 
-    public void updateMoves(String moves){
-        this.movesLabel.setText(moves);
-    }
+		for (Tile tile: tiles){
+			tile.draw(tilesGraphicsContext);
+		}
 
-    public void updateTime(String time){
-        this.timeLabel.setText(time);
-    }
+		this.root.getChildren().clear();
+		this.root.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
+	}
+
+
+
+	public void updateMoves(String moves){
+		this.movesLabel.setText(moves);
+	}
+
+	public void updateTime(String time){
+		this.timeLabel.setText(time);
+	}
 
 
 
