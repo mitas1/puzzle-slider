@@ -1,9 +1,13 @@
 package Controller;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 import Engine.Engine;
+import Engine.Globals.GridPoint;
 import ExceptionHandling.InvalidArgumentException;
+import ExceptionHandling.UninitializedGameException;
 import Renderer.Renderer;
 import Renderer.Tile;
 import javafx.application.Application;
@@ -23,9 +27,7 @@ public class PuzzleSlider extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			mEngine = new Engine();
-		} catch (InvalidArgumentException e) {
-			//WTF MATO?
-		}
+		} catch (InvalidArgumentException e) {}
 		mRenderer = new Renderer(primaryStage, this);
 	}
 
@@ -41,9 +43,27 @@ public class PuzzleSlider extends Application {
 		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				mRenderer.loadGameWindow(new ArrayList<Tile>());
+				try {
+					mEngine = new Engine(4);
+					List<Tile> tiles = new ArrayList<>();
+					connectTiles(tiles);
+					mRenderer.loadGameWindow(tiles);
+				} catch (UninitializedGameException | InvalidArgumentException e) {
+					e.printStackTrace();
+				} 
 			}
 		});
+	}
+
+
+	private void connectTiles(List<Tile> tiles) throws UninitializedGameException, InvalidArgumentException {
+		int size = mEngine.getGameData().getSize();
+		int tileSize = mRenderer.canvasWidth/size;
+		for (int i = 0; i < size; i++){
+			for (int j = 0;j < size; j++){
+				tiles.add(new Tile(j,i,tileSize,mEngine.getGameData().getTile(new GridPoint(j, i))));
+			}
+		}
 	}
 
 
@@ -74,10 +94,10 @@ public class PuzzleSlider extends Application {
 	public void setSaveGameListener(Button saveGameBtn) {
 		try {
 			mEngine.saveGame("tmp.save");
-//			TODO change to dynamic
+			//			TODO change to dynamic
 		} catch (IOException e) {
 			e.printStackTrace();
-//			TODO change to popup
+			//			TODO change to popup
 		}
 	}
 
