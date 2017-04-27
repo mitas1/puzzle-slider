@@ -1,7 +1,5 @@
 package Renderer;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,12 +10,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import static Renderer.Renderer.gameWindowHeight;
-import static Renderer.Renderer.gameWindowWidth;
 
 import java.util.ArrayList;
 
-import ConsoleController.Controller;
 import Controller.PuzzleSlider;
 
 public class Renderer {
@@ -79,6 +74,8 @@ public class Renderer {
         quitGameBtn.setLayoutY(530);
         
         controller.setNewGameListener(newGameBtn);
+        controller.setSaveGameListener(saveGameBtn);
+        controller.setLoadGameListener(loadGameBtn);
         controller.setQuitGameListener(quitGameBtn);
 //        other listeneres...
 

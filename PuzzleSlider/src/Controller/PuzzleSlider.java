@@ -1,4 +1,5 @@
 package Controller;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Engine.Engine;
@@ -60,5 +61,27 @@ public class PuzzleSlider extends Application {
 			}
 
 		});
+	}
+
+
+
+	public void setSaveGameListener(Button saveGameBtn) {
+		try {
+			mEngine.saveGame("tmp.save");
+//			TODO change to dynamic
+		} catch (IOException e) {
+			e.printStackTrace();
+//			TODO change to popup
+		}
+	}
+
+
+
+	public void setLoadGameListener(Button loadGameBtn) {
+		try {
+			mEngine.loadGame("tmp.save");
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
