@@ -144,6 +144,9 @@ public class Renderer {
 		for (Tile tile: tiles){
 			tile.draw(tilesGraphicsContext);
 		}
+		String text = movesLabel.getText();
+        int moves = Integer.parseInt(text);
+        updateMoves(""+(++moves));
 	}
 
 
