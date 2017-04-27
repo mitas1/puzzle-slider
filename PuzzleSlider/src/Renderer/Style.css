@@ -1,0 +1,14 @@
+@font-face {
+    -fx-font-family: 'ButtonFont';
+    -fx-src: url('/resources/fonts/PermanentMarker.ttf') format('ttf');
+}
+
+#Button{
+    -fx-font-family: ButtonFont;
+    -fx-background-color: transparent;
+
+}
+
+.loadGameBtn{
+    font-family: ButtonFont;
+}

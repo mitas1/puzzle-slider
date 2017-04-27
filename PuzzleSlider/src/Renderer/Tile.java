@@ -27,6 +27,8 @@ public class Tile {
 
             gc.setFill(Color.AZURE);
             gc.fillRect(x,y,dimension,dimension);
+            gc.setStroke(Color.BLACK);
+            gc.strokeRect(x,y,dimension,dimension);
 
             gc.setFill(Color.BLACK);
             gc.fillText(Integer.toString(number),x+dimension/2,y+dimension/2);
