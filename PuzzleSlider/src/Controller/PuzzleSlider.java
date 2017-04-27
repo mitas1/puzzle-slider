@@ -14,7 +14,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class PuzzleSlider extends Application {
@@ -31,7 +33,21 @@ public class PuzzleSlider extends Application {
 		mRenderer = new Renderer(primaryStage, this);
 	}
 
+	public void setOnClickListener(Canvas canvas){
 
+		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				int size = mEngine.getGameData().getSize();
+				int tileSize = mRenderer.canvasWidth/size;
+				System.out.println(event.getX()/tileSize);
+				
+				System.out.println(event.getY()/tileSize);
+			}
+		});
+		
+		
+	}
 
 	public static void main(String[] args) {
 		launch(args);
