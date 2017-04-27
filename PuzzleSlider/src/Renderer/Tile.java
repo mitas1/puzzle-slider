@@ -2,6 +2,7 @@ package Renderer;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Tile {
         private int row,column;
@@ -25,12 +26,16 @@ public class Tile {
             double x = row*dimension;
             double y = column*dimension;
 
-            gc.setFill(Color.AZURE);
+            if (number==0)
+                gc.setFill(Color.RED);
+            else
+                gc.setFill(Color.AZURE);
             gc.fillRect(x,y,dimension,dimension);
             gc.setStroke(Color.BLACK);
             gc.strokeRect(x,y,dimension,dimension);
 
             gc.setFill(Color.BLACK);
+            gc.setFont(new Font("Arial", 18));
             gc.fillText(Integer.toString(number),x+dimension/2,y+dimension/2);
 
         }
