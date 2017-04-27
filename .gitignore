@@ -1,3 +1,6 @@
 PuzzleSlider/bin
 .metadata
 .recommenders
+.idea/
+*.eml
+*.iml
