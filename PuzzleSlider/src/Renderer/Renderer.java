@@ -13,8 +13,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Renderer {
-    public final int gameWindowWidth=1024;
-    public final int gameWindowHeight =768;
+    public static int gameWindowWidth=1024;
+    public static int gameWindowHeight =768;
     private final int canvasWidth=495;
     private final int canvasHeight =495;
 
