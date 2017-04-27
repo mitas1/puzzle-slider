@@ -31,13 +31,12 @@ public class Renderer {
 
 	Label movesLabel, timeLabel;
 
-	Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn;
+	Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn,resGameBtn;
 
 	PuzzleSlider controller;
 
 
-
-	public Renderer(Stage primaryStage, PuzzleSlider controller){
+    public Renderer(Stage primaryStage, PuzzleSlider controller){
 		this.root = new Pane();
 		Scene scene = new Scene(root, gameWindowWidth, gameWindowHeight);
 		this.controller = controller;
@@ -46,22 +45,26 @@ public class Renderer {
 
 		this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
 		this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
+		controller.setOnClickListener(this.gameCanvas);
 
 		showMenu();
 		primaryStage.setScene( scene );
 		primaryStage.show();
-
 
 	}
 
 
 
 	public void setupMenu(){
-		newGameBtn = new Button("New Game");
-		saveGameBtn = new Button("Save Game");
+        resGameBtn = new Button("Resume Game");
+        newGameBtn = new Button("New Game");
+        saveGameBtn = new Button("Save Game");
 		loadGameBtn = new Button("Load Game");
 		quitGameBtn = new Button("Quit Game");
 
+
+        resGameBtn.setLayoutX(700);
+        resGameBtn.setLayoutY(100);
 		newGameBtn.setLayoutX(700);
 		newGameBtn.setLayoutY(140);
 		saveGameBtn.setLayoutX(700);
@@ -84,7 +87,7 @@ public class Renderer {
 		gc.drawImage(menuBackgroundImage,0,0);
 
 		this.root.getChildren().clear();
-		this.root.getChildren().addAll(backgroundCanvas,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
+		this.root.getChildren().addAll(backgroundCanvas,resGameBtn,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
 	}
 
 
