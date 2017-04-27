@@ -2,6 +2,7 @@ package Renderer;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -9,8 +10,15 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+import static Renderer.Renderer.gameWindowHeight;
+import static Renderer.Renderer.gameWindowWidth;
 
 import java.util.ArrayList;
+
+import ConsoleController.Controller;
+import Controller.PuzzleSlider;
 
 public class Renderer {
     public static int gameWindowWidth=1024;
@@ -31,22 +39,31 @@ public class Renderer {
     Label movesLabel, timeLabel;
 
     Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn;
+    
+    PuzzleSlider controller;
 
 
 
-    public Renderer(Pane root){
-        this.root = root;
-
+    public Renderer(Stage primaryStage, PuzzleSlider controller){
+    	this.root = new Pane();
+		Scene scene = new Scene(root, gameWindowWidth, gameWindowHeight);
+		this.controller = controller;
+        setupMenu();
+        
+        
         this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
         this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
+        
+		showMenu();
+		primaryStage.setScene( scene );
+		primaryStage.show();
 
-        setupMenu();
+
     }
 
 
 
     public void setupMenu(){
-
         newGameBtn = new Button("New Game");
         saveGameBtn = new Button("Save Game");
         loadGameBtn = new Button("Load Game");
@@ -58,22 +75,18 @@ public class Renderer {
         saveGameBtn.setLayoutY(170);
         loadGameBtn.setLayoutX(700);
         loadGameBtn.setLayoutY(200);
-
         quitGameBtn.setLayoutX(700);
         quitGameBtn.setLayoutY(530);
+        
+        controller.setNewGameListener(newGameBtn);
+        controller.setQuitGameListener(quitGameBtn);
+//        other listeneres...
 
-        newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                loadGameWindow(new ArrayList<Tile>());
-            }
-        });
     }
 
     public void showMenu(){
         GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
         gc.drawImage(menuBackgroundImage,0,0);
-
 
         this.root.getChildren().clear();
         this.root.getChildren().addAll(backgroundCanvas,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
@@ -105,13 +118,9 @@ public class Renderer {
 
         menuBtn.setLayoutX(120);
         menuBtn.setLayoutY(340);
-
-        menuBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                showMenu();
-            }
-        });
+        
+        
+        controller.setMenuButtonListener(menuBtn);
 
         GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
         tilesGraphicsContext.clearRect(0,0,canvasWidth,canvasHeight);
