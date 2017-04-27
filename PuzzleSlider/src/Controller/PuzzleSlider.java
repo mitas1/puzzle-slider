@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import Engine.Engine;
+import ExceptionHandling.InvalidArgumentException;
 import Renderer.Renderer;
 import Renderer.Tile;
 import javafx.application.Application;
@@ -20,6 +21,11 @@ public class PuzzleSlider extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		try {
+			mEngine = new Engine();
+		} catch (InvalidArgumentException e) {
+			//WTF MATO?
+		}
 		mRenderer = new Renderer(primaryStage, this);
 	}
 

@@ -104,8 +104,16 @@ public class Renderer {
         movesLabel.setTextFill(Color.WHITE);
 
         menuBtn = new Button("MENU");
+        int counter =1;
 
-
+        for (int i = 0; i< 4;i++){
+            for (int j=0;j<4;j++){
+                if (counter<16)
+                tiles.add(new Tile(j,i,canvasWidth/4,counter));
+                counter++;
+            }
+        }
+        tiles.add(new Tile(3,3,canvasWidth/4,0));
         GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
 
         gc.drawImage(gameBackgroundImage,0,0);
