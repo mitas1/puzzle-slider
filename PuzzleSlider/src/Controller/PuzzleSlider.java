@@ -24,6 +24,10 @@ public class PuzzleSlider extends Application {
 	Engine mEngine;
 	Renderer mRenderer;
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -33,6 +37,10 @@ public class PuzzleSlider extends Application {
 		mRenderer = new Renderer(primaryStage, this);
 	}
 
+
+
+
+
 	public void setOnClickListener(Canvas canvas){
 
 		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -40,17 +48,20 @@ public class PuzzleSlider extends Application {
 			public void handle(MouseEvent event) {
 				int size = mEngine.getGameData().getSize();
 				int tileSize = mRenderer.canvasWidth/size;
-				System.out.println(event.getX()/tileSize);
-				
-				System.out.println(event.getY()/tileSize);
+				int row = (int)(event.getX()/tileSize);
+				int col = (int)(event.getY()/tileSize);
+				mEngine.move(row, col);
+				List<Tile> tiles = new ArrayList<>();
+				try {
+					connectTiles(tiles);
+				} catch (UninitializedGameException | InvalidArgumentException e) {
+					e.printStackTrace();
+				}
+				mRenderer.drawTiles(tiles);
 			}
 		});
-		
-		
-	}
 
-	public static void main(String[] args) {
-		launch(args);
+
 	}
 
 
