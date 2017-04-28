@@ -1,5 +1,7 @@
 package Renderer;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,7 +15,7 @@ import java.util.List;
 
 import Controller.PuzzleSlider;
 
-public class Renderer {
+public class Renderer{
 	public final int gameWindowWidth=1024;
 	public final int gameWindowHeight =768;
 	public final int canvasWidth=495;
@@ -35,6 +37,10 @@ public class Renderer {
 
 	PuzzleSlider controller;
 
+	int seconds;
+	int moves;
+	boolean pause;
+
 
     public Renderer(Stage primaryStage, PuzzleSlider controller){
 		this.root = new Pane();
@@ -48,11 +54,12 @@ public class Renderer {
 		controller.setOnClickListener(this.gameCanvas);
 
 		showMenu();
+
 		primaryStage.setScene( scene );
 		primaryStage.show();
 
+        setupGame();
 	}
-
 
 
 	public void setupMenu(){
@@ -62,18 +69,13 @@ public class Renderer {
 		loadGameBtn = new Button("Load Game");
 		quitGameBtn = new Button("Quit Game");
 
+        setObjectsPos(resGameBtn,700,100);
+        setObjectsPos(newGameBtn,700,190);
+        setObjectsPos(saveGameBtn,700,295);
+        setObjectsPos(loadGameBtn,700,390);
+        setObjectsPos(quitGameBtn,700,530);
 
-        resGameBtn.setLayoutX(700);
-        resGameBtn.setLayoutY(100);
-		newGameBtn.setLayoutX(700);
-		newGameBtn.setLayoutY(140);
-		saveGameBtn.setLayoutX(700);
-		saveGameBtn.setLayoutY(170);
-		loadGameBtn.setLayoutX(700);
-		loadGameBtn.setLayoutY(200);
-		quitGameBtn.setLayoutX(700);
-		quitGameBtn.setLayoutY(530);
-
+        controller.setResumeGameListener(resGameBtn);
 		controller.setNewGameListener(newGameBtn);
 		controller.setSaveGameListener(saveGameBtn);
 		controller.setLoadGameListener(loadGameBtn);
@@ -82,45 +84,53 @@ public class Renderer {
 
 	}
 
-	public void showMenu(){
+    private void setObjectsPos(Node object, int x, int y) {
+        object.setLayoutX(x);
+        object.setLayoutY(y);
+    }
+
+    public void showMenu(){
 		GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
 		gc.drawImage(menuBackgroundImage,0,0);
 
-		this.root.getChildren().clear();
+        resGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
+        saveGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
+
+        this.root.getChildren().clear();
 		this.root.getChildren().addAll(backgroundCanvas,resGameBtn,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
 	}
 
+	public void setupGame(){
+        timeLabel = new Label("00:00");
+        movesLabel = new Label("0");
 
-	public void loadGameWindow(List<Tile> tiles){
-		timeLabel = new Label("00:00");
-		movesLabel = new Label("0");
+        setObjectsPos(timeLabel,120,135);
+        timeLabel.setStyle("-fx-font-size: 2em;");
+        timeLabel.setTextFill(Color.WHITE);
 
-		timeLabel.setLayoutX(120);
-		timeLabel.setLayoutY(135);
-		timeLabel.setStyle("-fx-font-size: 2em;");
-		timeLabel.setTextFill(Color.WHITE);
-		movesLabel.setLayoutX(120);
-		movesLabel.setLayoutY(180);
-		movesLabel.setStyle("-fx-font-size: 2em;");
-		movesLabel.setTextFill(Color.WHITE);
+        setObjectsPos(movesLabel,120,180);
+        movesLabel.setStyle("-fx-font-size: 2em;");
+        movesLabel.setTextFill(Color.WHITE);
 
-		menuBtn = new Button("MENU");
+        menuBtn = new Button("MENU");
+        setObjectsPos(menuBtn,120,340);
+        controller.setMenuButtonListener(menuBtn);
 
-		GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
+        gameCanvas.setLayoutX(gameCanvasOffsetX);
+        gameCanvas.setLayoutY(gameCanvasOffsetY);
 
-		gc.drawImage(gameBackgroundImage,0,0);
-
-		gameCanvas.setLayoutX(gameCanvasOffsetX);
-		gameCanvas.setLayoutY(gameCanvasOffsetY);
-
-		menuBtn.setLayoutX(120);
-		menuBtn.setLayoutY(340);
+        pause = true;
+    }
 
 
-		controller.setMenuButtonListener(menuBtn);
-		
+	public void loadGameWindow(List<Tile> tiles){//start new Game
+	    if (!pause)
+	        resetVars();
+
+        GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
+        gc.drawImage(gameBackgroundImage,0,0);
+
 		drawTiles(tiles);
-
 
 		this.root.getChildren().clear();
 		this.root.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
@@ -129,11 +139,15 @@ public class Renderer {
 
 
 	public void updateMoves(String moves){
-		this.movesLabel.setText(moves);
+		movesLabel.setText(moves);
 	}
 
-	public void updateTime(String time){
-		this.timeLabel.setText(time);
+	public void updateTime() {
+        String min = (seconds/60<10 ? "0" : "" )+seconds/60;
+        String sec = (seconds%60<10 ? "0" : "" )+seconds%60;
+        StringBuilder time = new StringBuilder();
+        time.append(min+":"+sec);
+        timeLabel.setText(time.toString());
 	}
 
 
@@ -144,11 +158,22 @@ public class Renderer {
 		for (Tile tile: tiles){
 			tile.draw(tilesGraphicsContext);
 		}
-		String text = movesLabel.getText();
-        int moves = Integer.parseInt(text);
-        updateMoves(""+(++moves));
+		if (!pause) {
+            updateMoves("" + (moves++));
+        }
+        pause=false;
 	}
 
 
+    protected void resetVars(){
+	    movesLabel.setText("0");
+	    timeLabel.setText("00:00");
+	    seconds = 0;
+	    pause = false;
+	    moves = 0;
+    }
 
+    public void pauseGame() {
+	    pause = !pause;
+    }
 }
