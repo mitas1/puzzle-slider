@@ -50,14 +50,15 @@ public class PuzzleSlider extends Application {
 				int tileSize = mRenderer.canvasWidth/size;
 				int row = (int)(event.getX()/tileSize);
 				int col = (int)(event.getY()/tileSize);
-				mEngine.move(row, col);
-				List<Tile> tiles = new ArrayList<>();
-				try {
-					connectTiles(tiles);
-				} catch (UninitializedGameException | InvalidArgumentException e) {
-					e.printStackTrace();
+				if (mEngine.move(row, col)) {
+					List<Tile> tiles = new ArrayList<>();
+					try {
+						connectTiles(tiles);
+					} catch (UninitializedGameException | InvalidArgumentException e) {
+						e.printStackTrace();
+					}
+					mRenderer.drawTiles(tiles);
 				}
-				mRenderer.drawTiles(tiles);
 			}
 		});
 
@@ -74,6 +75,7 @@ public class PuzzleSlider extends Application {
 					mEngine = new Engine(4);
 					List<Tile> tiles = new ArrayList<>();
 					connectTiles(tiles);
+					mRenderer.pauseGame(); //Mb some fix ?
 					mRenderer.loadGameWindow(tiles);
 				} catch (UninitializedGameException | InvalidArgumentException e) {
 					e.printStackTrace();
@@ -99,6 +101,7 @@ public class PuzzleSlider extends Application {
 		menuBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				mRenderer.pauseGame();
 				mRenderer.showMenu();
 			}
 		});
@@ -136,5 +139,21 @@ public class PuzzleSlider extends Application {
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setResumeGameListener(Button resumeGameBtn) {
+		resumeGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					List<Tile> tiles = new ArrayList<>();
+					connectTiles(tiles);
+					mRenderer.loadGameWindow(tiles);
+				} catch (UninitializedGameException | InvalidArgumentException e) {
+					e.printStackTrace();
+				}
+			}
+
+		});
 	}
 }
