@@ -5,8 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -15,11 +14,14 @@ import java.util.List;
 
 import Controller.PuzzleSlider;
 
-public class Renderer{
+public class Renderer extends Pane{
 	public final int gameWindowWidth=1024;
 	public final int gameWindowHeight =768;
 	public final int canvasWidth=495;
 	public final int canvasHeight =495;
+
+	public static final int minGameSize = 4;
+	public static final int maxGameSize = 10;
 
 	private final String imagesPath = "resources/images/";
 	private final Image menuBackgroundImage = new Image(imagesPath+"main_background.png");
@@ -27,7 +29,6 @@ public class Renderer{
 
 	private final int gameCanvasOffsetX = 398;
 	private final int gameCanvasOffsetY = 131;
-	private Pane root;
 
 	Canvas backgroundCanvas,gameCanvas;
 
@@ -41,10 +42,11 @@ public class Renderer{
 	int moves;
 	boolean pause;
 
+	public NewGameDialog newGameDialog;
+
 
     public Renderer(Stage primaryStage, PuzzleSlider controller){
-		this.root = new Pane();
-		Scene scene = new Scene(root, gameWindowWidth, gameWindowHeight);
+		Scene scene = new Scene(this, gameWindowWidth, gameWindowHeight);
 		this.controller = controller;
 		setupMenu();
 
@@ -59,10 +61,14 @@ public class Renderer{
 		primaryStage.show();
 
         setupGame();
+
+		newGameDialog = new NewGameDialog(primaryStage, controller);
+
 	}
 
 
 	public void setupMenu(){
+
         resGameBtn = new Button("Resume Game");
         newGameBtn = new Button("New Game");
         saveGameBtn = new Button("Save Game");
@@ -90,14 +96,18 @@ public class Renderer{
     }
 
     public void showMenu(){
+
+
+
 		GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
 		gc.drawImage(menuBackgroundImage,0,0);
 
         resGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
         saveGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
 
-        this.root.getChildren().clear();
-		this.root.getChildren().addAll(backgroundCanvas,resGameBtn,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
+        this.getChildren().clear();
+		this.getChildren().addAll(backgroundCanvas,resGameBtn,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
+
 	}
 
 	public void setupGame(){
@@ -132,8 +142,8 @@ public class Renderer{
 
 		drawTiles(tiles);
 
-		this.root.getChildren().clear();
-		this.root.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
+		this.getChildren().clear();
+		this.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
 	}
 
 
@@ -176,4 +186,7 @@ public class Renderer{
     public void pauseGame() {
 	    pause = !pause;
     }
+
+
+
 }

@@ -1,4 +1,5 @@
 package Controller;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -71,15 +72,8 @@ public class PuzzleSlider extends Application {
 		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					mEngine = new Engine(4);
-					List<Tile> tiles = new ArrayList<>();
-					connectTiles(tiles);
-					mRenderer.pauseGame(); //Mb some fix ?
-					mRenderer.loadGameWindow(tiles);
-				} catch (UninitializedGameException | InvalidArgumentException e) {
-					e.printStackTrace();
-				} 
+				mRenderer.newGameDialog.showAndWait();
+				//TODO Check
 			}
 		});
 	}
@@ -155,5 +149,22 @@ public class PuzzleSlider extends Application {
 			}
 
 		});
+	}
+	//TODO Check controller team
+	public void startNewGame(int gameSize) {
+		try {
+			mEngine = new Engine(gameSize);
+			List<Tile> tiles = new ArrayList<>();
+			connectTiles(tiles);
+			mRenderer.pauseGame(); //Mb some fix ?
+			mRenderer.loadGameWindow(tiles);
+		} catch (UninitializedGameException | InvalidArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//TODO
+	public void startNewGame(int sliderValue, File file) {
+
 	}
 }
