@@ -39,7 +39,6 @@ public class Renderer extends Pane{
 	PuzzleSlider controller;
 
 	int seconds;
-	int moves;
 	boolean pause;
 
 	public NewGameDialog newGameDialog;
@@ -68,8 +67,7 @@ public class Renderer extends Pane{
 
 
 	public void setupMenu(){
-
-        resGameBtn = new Button("Resume Game");
+    	resGameBtn = new Button("Resume Game");
         newGameBtn = new Button("New Game");
         saveGameBtn = new Button("Save Game");
 		loadGameBtn = new Button("Load Game");
@@ -148,8 +146,8 @@ public class Renderer extends Pane{
 
 
 
-	public void updateMoves(String moves){
-		movesLabel.setText(moves);
+	public void updateMoves(int moves){
+		movesLabel.setText(Integer.toString(moves));
 	}
 
 	public void updateTime() {
@@ -168,9 +166,6 @@ public class Renderer extends Pane{
 		for (Tile tile: tiles){
 			tile.draw(tilesGraphicsContext);
 		}
-		if (!pause) {
-            updateMoves("" + (moves++));
-        }
         pause=false;
 	}
 
@@ -180,7 +175,6 @@ public class Renderer extends Pane{
 	    timeLabel.setText("00:00");
 	    seconds = 0;
 	    pause = false;
-	    moves = 0;
     }
 
     public void pauseGame() {
