@@ -96,7 +96,6 @@ public class PuzzleSlider extends Application {
 		menuBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				mRenderer.pauseGame();
 				mRenderer.showMenu();
 			}
 		});
@@ -164,8 +163,4 @@ public class PuzzleSlider extends Application {
 		}
 	}
 
-	//TODO
-	public void startNewGame(int sliderValue, File file) {
-
-	}
 }
