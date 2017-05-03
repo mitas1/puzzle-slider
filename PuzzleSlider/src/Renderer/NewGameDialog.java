@@ -29,9 +29,13 @@ public class NewGameDialog extends Dialog {
             Slider slider = new Slider(Renderer.minGameSize,Renderer.maxGameSize,4);
             setupSlider(slider);
 
+            RadioButton numbers = new RadioButton("numbers");
+            RadioButton picture = new RadioButton("picture");
+
+
             Button loadPicBtn = new Button("Load Picture");
             loadPicBtn.setOnAction(new EventHandler<ActionEvent>() {
-                @Override //TODO
+                @Override //TODO with Picture
                 public void handle(ActionEvent event) {
                     final FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Choose a Picture");
@@ -74,8 +78,11 @@ public class NewGameDialog extends Dialog {
 
             this.add(new Label("Game size"),0,0);
             this.add(slider,1,0);
-            this.add(new Label("Choose a picture"),0,1);
-            this.add(loadPicBtn,1,1);
+            this.add(new Label("Game type"),0,1);
+            this.add(numbers,1,1);
+            this.add(picture,1,2);
+            this.add(new Label("Choose a picture"),0,3);
+            this.add(loadPicBtn,1,3);
 
 
         }

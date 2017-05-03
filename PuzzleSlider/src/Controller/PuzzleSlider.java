@@ -59,6 +59,7 @@ public class PuzzleSlider extends Application {
 						e.printStackTrace();
 					}
 					mRenderer.drawTiles(tiles);
+					mRenderer.updateMoves(mEngine.getGameData().getMoveCount());
 				}
 			}
 		});
