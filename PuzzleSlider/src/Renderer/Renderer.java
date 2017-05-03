@@ -10,11 +10,14 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.io.File;
 import java.util.List;
 
 import Controller.PuzzleSlider;
 
 public class Renderer extends Pane{
+    //TODO start game with image
 	public final int gameWindowWidth=1024;
 	public final int gameWindowHeight =768;
 	public final int canvasWidth=495;
@@ -38,32 +41,38 @@ public class Renderer extends Pane{
 
 	PuzzleSlider controller;
 
-	int seconds;
-	boolean pause;
+	SimpleBooleanProperty gamePaused;
+	private boolean gameStarted;
 
 	public NewGameDialog newGameDialog;
 
+	Image picture;
+    boolean imageGame;
 
     public Renderer(Stage primaryStage, PuzzleSlider controller){
 		Scene scene = new Scene(this, gameWindowWidth, gameWindowHeight);
 		this.controller = controller;
-		setupMenu();
-
-
-		this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
-		this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
-		controller.setOnClickListener(this.gameCanvas);
-
-		showMenu();
+		init();
 
 		primaryStage.setScene( scene );
 		primaryStage.show();
 
         setupGame();
 
-		newGameDialog = new NewGameDialog(primaryStage, controller);
+		newGameDialog = new NewGameDialog(primaryStage, controller, this);
 
 	}
+
+	private void init(){
+        this.backgroundCanvas= new Canvas(gameWindowWidth,gameWindowHeight);
+        this.gameCanvas = new Canvas(canvasWidth,canvasHeight);
+        controller.setOnClickListener(this.gameCanvas);
+
+        gamePaused = new SimpleBooleanProperty(false);
+        gameStarted = false;
+        setupMenu();
+        showMenu();
+    }
 
 
 	public void setupMenu(){
@@ -72,6 +81,9 @@ public class Renderer extends Pane{
         saveGameBtn = new Button("Save Game");
 		loadGameBtn = new Button("Load Game");
 		quitGameBtn = new Button("Quit Game");
+
+        resGameBtn.disableProperty().bind(gamePaused.not());
+        saveGameBtn.disableProperty().bind(gamePaused.not());
 
         setObjectsPos(resGameBtn,700,100);
         setObjectsPos(newGameBtn,700,190);
@@ -94,14 +106,11 @@ public class Renderer extends Pane{
     }
 
     public void showMenu(){
-
-
-
+	    if (gamePaused.not().get() && gameStarted){
+            pauseGame();
+        }
 		GraphicsContext gc = this.backgroundCanvas.getGraphicsContext2D();
 		gc.drawImage(menuBackgroundImage,0,0);
-
-        resGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
-        saveGameBtn.disableProperty().bind(new SimpleBooleanProperty(pause).not());
 
         this.getChildren().clear();
 		this.getChildren().addAll(backgroundCanvas,resGameBtn,newGameBtn,saveGameBtn,loadGameBtn,quitGameBtn);
@@ -126,13 +135,12 @@ public class Renderer extends Pane{
 
         gameCanvas.setLayoutX(gameCanvasOffsetX);
         gameCanvas.setLayoutY(gameCanvasOffsetY);
-
-        pause = true;
     }
 
 
-	public void loadGameWindow(List<Tile> tiles){//start new Game
-	    if (!pause)
+	public void loadGameWindow(List<Tile> tiles){
+	    gameStarted = true;
+	    if (!gamePaused.get())
 	        resetVars();
 
         GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
@@ -150,7 +158,7 @@ public class Renderer extends Pane{
 		movesLabel.setText(Integer.toString(moves));
 	}
 
-	public void updateTime() {
+	public void updateTime(int seconds) {
         String min = (seconds/60<10 ? "0" : "" )+seconds/60;
         String sec = (seconds%60<10 ? "0" : "" )+seconds%60;
         StringBuilder time = new StringBuilder();
@@ -166,21 +174,22 @@ public class Renderer extends Pane{
 		for (Tile tile: tiles){
 			tile.draw(tilesGraphicsContext);
 		}
-        pause=false;
 	}
 
 
     protected void resetVars(){
-	    movesLabel.setText("0");
-	    timeLabel.setText("00:00");
-	    seconds = 0;
-	    pause = false;
+	    updateMoves(0);
+	    updateTime(0);
+	    pauseGame();
     }
 
     public void pauseGame() {
-	    pause = !pause;
+	    gamePaused.set(gamePaused.not().get());
     }
 
-
+    public void setPictureGame(Image img){
+        imageGame = true;
+        picture = img;
+    }
 
 }
