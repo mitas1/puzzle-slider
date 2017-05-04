@@ -54,10 +54,7 @@ public class Renderer extends Pane{
     int xButtonPos = 650;
 
     public Renderer(Stage primaryStage, PuzzleSlider controller){
-        Font.loadFont(
-                Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(),
-                10
-        );
+        Font.loadFont(Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(), 10);
 
 		Scene scene = new Scene(this, gameWindowWidth, gameWindowHeight);
         scene.getStylesheets().add(getClass().getResource("GUI_styles.css").toExternalForm());
@@ -114,7 +111,7 @@ public class Renderer extends Pane{
 		controller.setNewGameListener(newGameBtn);
 		controller.setSaveGameListener(saveGameBtn);
 		controller.setLoadGameListener(loadGameBtn);
-		controller.setQuitGameListener(quitGameBtn);
+        controller.setQuitGameListener(quitGameBtn);
 		//        other listeneres...
 
 	}
@@ -207,8 +204,8 @@ public class Renderer extends Pane{
 	    pauseGame();
     }
 
-    public void pauseGame() {
-	    gamePaused.set(gamePaused.not().get());
+    public void pauseGame(){
+        gamePaused.set(gamePaused.not().get());
     }
 
     public void setPictureGame(Image img){
