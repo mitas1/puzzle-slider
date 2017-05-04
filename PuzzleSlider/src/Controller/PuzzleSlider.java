@@ -156,7 +156,6 @@ public class PuzzleSlider extends Application {
 			mEngine = new Engine(gameSize);
 			List<Tile> tiles = new ArrayList<>();
 			connectTiles(tiles);
-			mRenderer.pauseGame(); //Mb some fix ?
 			mRenderer.loadGameWindow(tiles);
 		} catch (UninitializedGameException | InvalidArgumentException e) {
 			e.printStackTrace();

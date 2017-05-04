@@ -1,0 +1,15 @@
+@font-face {
+    -fx-font-family: 'ButtonFont';
+    -fx-src: url('/resources/fonts/PermanentMarker.ttf') format('ttf');
+}
+
+.myButton{
+    -fx-font-family: PermanentMarker;
+    -fx-text-fill:white;
+    -fx-font-size:25;
+    -fx-background-color: transparent;
+}
+
+.myButton:hover{
+    -fx-text-fill:red;
+}
