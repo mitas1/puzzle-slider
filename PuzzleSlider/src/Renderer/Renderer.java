@@ -7,26 +7,26 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import Controller.PuzzleSlider;
 
 public class Renderer extends Pane{
-    //TODO start game with image
 	public final int gameWindowWidth=1024;
 	public final int gameWindowHeight =768;
-	public final int canvasWidth=495;
-	public final int canvasHeight =495;
+	public static final int canvasWidth=495;
+	public static final int canvasHeight =495;
 
 	public static final int minGameSize = 4;
 	public static final int maxGameSize = 10;
 
-	private final String imagesPath = "resources/images/";
+	private final String imagesPath = "/resources/images/";
 	private final Image menuBackgroundImage = new Image(imagesPath+"main_background.png");
 	private final Image gameBackgroundImage = new Image(imagesPath+"game_background.png");
 
@@ -45,22 +45,35 @@ public class Renderer extends Pane{
 	private boolean gameStarted;
 
 	public NewGameDialog newGameDialog;
+    Dialog win;
+    ButtonType winNewGameButton;
 
 	Image picture;
     boolean imageGame;
 
+    int xButtonPos = 650;
+
     public Renderer(Stage primaryStage, PuzzleSlider controller){
+        Font.loadFont(
+                Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(),
+                10
+        );
+
 		Scene scene = new Scene(this, gameWindowWidth, gameWindowHeight);
-		this.controller = controller;
+        scene.getStylesheets().add(getClass().getResource("GUI_styles.css").toExternalForm());
+
+        this.controller = controller;
 		init();
 
 		primaryStage.setScene( scene );
 		primaryStage.show();
 
-        setupGame();
+        win = new Dialog();
+        win.initOwner(primaryStage);
 
 		newGameDialog = new NewGameDialog(primaryStage, controller, this);
 
+        setupGame();
 	}
 
 	private void init(){
@@ -82,14 +95,20 @@ public class Renderer extends Pane{
 		loadGameBtn = new Button("Load Game");
 		quitGameBtn = new Button("Quit Game");
 
+		resGameBtn.getStyleClass().add("myButton");
+        newGameBtn.getStyleClass().add("myButton");
+        saveGameBtn.getStyleClass().add("myButton");
+        loadGameBtn.getStyleClass().add("myButton");
+        quitGameBtn.getStyleClass().add("myButton");
+
         resGameBtn.disableProperty().bind(gamePaused.not());
         saveGameBtn.disableProperty().bind(gamePaused.not());
 
-        setObjectsPos(resGameBtn,700,100);
-        setObjectsPos(newGameBtn,700,190);
-        setObjectsPos(saveGameBtn,700,295);
-        setObjectsPos(loadGameBtn,700,390);
-        setObjectsPos(quitGameBtn,700,530);
+        setObjectsPos(resGameBtn,xButtonPos,100);
+        setObjectsPos(newGameBtn,xButtonPos,190);
+        setObjectsPos(saveGameBtn,xButtonPos,295);
+        setObjectsPos(loadGameBtn,xButtonPos,390);
+        setObjectsPos(quitGameBtn,xButtonPos,530);
 
         controller.setResumeGameListener(resGameBtn);
 		controller.setNewGameListener(newGameBtn);
@@ -132,9 +151,12 @@ public class Renderer extends Pane{
         menuBtn = new Button("MENU");
         setObjectsPos(menuBtn,120,340);
         controller.setMenuButtonListener(menuBtn);
+        menuBtn.getStyleClass().add("myButton");
 
         gameCanvas.setLayoutX(gameCanvasOffsetX);
         gameCanvas.setLayoutY(gameCanvasOffsetY);
+
+        setupWinningDialog();
     }
 
 
@@ -174,6 +196,8 @@ public class Renderer extends Pane{
 		for (Tile tile: tiles){
 			tile.draw(tilesGraphicsContext);
 		}
+		//tilesGraphicsContext.drawImage(picture,0,0);
+
 	}
 
 
@@ -190,6 +214,27 @@ public class Renderer extends Pane{
     public void setPictureGame(Image img){
         imageGame = true;
         picture = img;
+    }
+
+    private void setupWinningDialog(){
+        win.setTitle("Won game!");
+        win.setHeaderText("Congratulations! You've Won!");
+        win.setGraphic(new ImageView(this.getClass().getResource(imagesPath+"fireworks-icon.png").toString()));
+        winNewGameButton = new ButtonType("New Game", ButtonBar.ButtonData.OK_DONE);
+        ButtonType winMenuButton = new ButtonType("Menu", ButtonBar.ButtonData.OK_DONE);
+        win.getDialogPane().getButtonTypes().addAll(winNewGameButton,winMenuButton);
+    }
+
+    public void showWinningDialog(){
+        Optional<ButtonType> result = win.showAndWait();
+        gameStarted = false;
+        pauseGame();
+        if (result.get()==winNewGameButton){
+            newGameDialog.showAndWait();
+        }
+        else{
+            showMenu();
+        }
     }
 
 }

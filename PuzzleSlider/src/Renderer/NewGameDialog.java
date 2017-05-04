@@ -101,7 +101,7 @@ public class NewGameDialog extends Dialog {
 
         private boolean keepFile(File file) {
             try {
-                img = new Image(file.toURI().toURL().toExternalForm());
+                img = new Image(file.toURI().toURL().toExternalForm(),Renderer.canvasWidth,Renderer.canvasHeight, false,false);
             } catch (MalformedURLException e) {
                 return false;
             }
