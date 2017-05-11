@@ -51,7 +51,7 @@ public class Renderer extends Pane{
 	Image picture;
     boolean imageGame;
 
-    int xButtonPos = 650;
+    int xButtonPos = 560;
 
     public Renderer(Stage primaryStage, PuzzleSlider controller){
         Font.loadFont(Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(), 10);
@@ -86,26 +86,27 @@ public class Renderer extends Pane{
 
 
 	public void setupMenu(){
+
     	resGameBtn = new Button("Resume Game");
         newGameBtn = new Button("New Game");
         saveGameBtn = new Button("Save Game");
 		loadGameBtn = new Button("Load Game");
 		quitGameBtn = new Button("Quit Game");
 
-		resGameBtn.getStyleClass().add("myButton");
-        newGameBtn.getStyleClass().add("myButton");
-        saveGameBtn.getStyleClass().add("myButton");
-        loadGameBtn.getStyleClass().add("myButton");
-        quitGameBtn.getStyleClass().add("myButton");
+		resGameBtn.getStyleClass().add("control-button");
+        newGameBtn.getStyleClass().add("control-button");
+        saveGameBtn.getStyleClass().add("control-button");
+        loadGameBtn.getStyleClass().add("control-button");
+        quitGameBtn.getStyleClass().add("control-button");
 
         resGameBtn.disableProperty().bind(gamePaused.not());
         saveGameBtn.disableProperty().bind(gamePaused.not());
 
-        setObjectsPos(resGameBtn,xButtonPos,100);
-        setObjectsPos(newGameBtn,xButtonPos,190);
-        setObjectsPos(saveGameBtn,xButtonPos,295);
-        setObjectsPos(loadGameBtn,xButtonPos,390);
-        setObjectsPos(quitGameBtn,xButtonPos,530);
+        setObjectsPos(resGameBtn,xButtonPos,80);
+        setObjectsPos(newGameBtn,xButtonPos,170);
+        setObjectsPos(saveGameBtn,xButtonPos,260);
+        setObjectsPos(loadGameBtn,xButtonPos,350);
+        setObjectsPos(quitGameBtn,xButtonPos,480);
 
         controller.setResumeGameListener(resGameBtn);
 		controller.setNewGameListener(newGameBtn);
@@ -137,18 +138,18 @@ public class Renderer extends Pane{
         timeLabel = new Label("00:00");
         movesLabel = new Label("0");
 
-        setObjectsPos(timeLabel,120,135);
-        timeLabel.setStyle("-fx-font-size: 2em;");
-        timeLabel.setTextFill(Color.WHITE);
+        setObjectsPos(timeLabel,100,85);
+
+        timeLabel.getStyleClass().add("time-label");
 
         setObjectsPos(movesLabel,120,180);
         movesLabel.setStyle("-fx-font-size: 2em;");
         movesLabel.setTextFill(Color.WHITE);
 
         menuBtn = new Button("MENU");
-        setObjectsPos(menuBtn,120,340);
+        setObjectsPos(menuBtn,45,300);
         controller.setMenuButtonListener(menuBtn);
-        menuBtn.getStyleClass().add("myButton");
+        menuBtn.getStyleClass().add("control-button");
 
         gameCanvas.setLayoutX(gameCanvasOffsetX);
         gameCanvas.setLayoutY(gameCanvasOffsetY);

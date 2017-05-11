@@ -27,15 +27,15 @@ public class Tile {
             double y = column*dimension;
 
             if (number==0)
-                gc.setFill(Color.RED);
+                gc.setFill(Color.DARKRED);
             else
-                gc.setFill(Color.AZURE);
+                gc.setFill(Color.TRANSPARENT);
             gc.fillRect(x,y,dimension,dimension);
             gc.setStroke(Color.BLACK);
             gc.strokeRect(x,y,dimension,dimension);
 
-            gc.setFill(Color.BLACK);
-            gc.setFont(new Font("Arial", 18));
+            gc.setFill(Color.WHITE);
+            gc.setFont(new Font("Permanent Marker", 22));
             gc.fillText(Integer.toString(number),x+dimension/2,y+dimension/2);
 
         }

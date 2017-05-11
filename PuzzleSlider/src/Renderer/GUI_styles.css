@@ -1,15 +1,21 @@
 @font-face {
-    -fx-font-family: 'ButtonFont';
-    -fx-src: url('/resources/fonts/PermanentMarker.ttf') format('ttf');
+    src: url('/resources/fonts/PermanentMarker.ttf');
 }
 
-.myButton{
-    -fx-font-family: PermanentMarker;
-    -fx-text-fill:white;
-    -fx-font-size:25;
+.control-button {
+    -fx-font-family: 'Permanent Marker';
+    -fx-font-size: 52px;
+    -fx-text-fill: #fff;
     -fx-background-color: transparent;
 }
 
-.myButton:hover{
-    -fx-text-fill:red;
+.control-button:hover {
+    -fx-text-fill: #991c10;
+}
+
+.time-label {
+    -fx-font-family: 'Permanent Marker';
+    -fx-font-size: 52px;
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
 }
