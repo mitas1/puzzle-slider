@@ -37,7 +37,7 @@ public class Controller {
 	}
 	
 	protected void LoadGame(){
-		try {
+		/*try {
 			mEngine = new Engine();
 			mEngine.loadGame("save.sav");
 			System.out.println(mEngine);
@@ -45,10 +45,11 @@ public class Controller {
 			System.out.println("File save.sav cannot be found");
 		} catch (Exception e){
 			System.out.println("This shouldn't happen");
-		}
+		}*/
 	}
 	
 	protected void SaveGame(){
+		/*
 		try{
 			if (mEngine != null){
 				if(mEngine.inProgress()){
@@ -63,6 +64,7 @@ public class Controller {
 		} catch (Exception e) {
 			System.out.println("This shouldn't happen");
 		}
+		*/
 	}
 	
 	protected void Process( String input ) {

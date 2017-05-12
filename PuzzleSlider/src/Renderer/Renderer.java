@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import Controller.PuzzleSlider;
 public class Renderer extends Pane{
 	public final int gameWindowWidth=1024;
 	public final int gameWindowHeight =768;
+	
 	public static final int canvasWidth=495;
 	public static final int canvasHeight =495;
 
@@ -32,15 +34,15 @@ public class Renderer extends Pane{
 
 	private final int gameCanvasOffsetX = 398;
 	private final int gameCanvasOffsetY = 131;
-
+	
 	Canvas backgroundCanvas,gameCanvas;
 
-	Label movesLabel, timeLabel;
+	Label movesLabel, timeLabel, movesTextLabel, timeTextLabel;
 
 	Button newGameBtn,loadGameBtn,saveGameBtn,quitGameBtn,menuBtn,resGameBtn;
 
 	PuzzleSlider controller;
-
+	
 	SimpleBooleanProperty gamePaused;
 	private boolean gameStarted;
 
@@ -137,15 +139,21 @@ public class Renderer extends Pane{
 	public void setupGame(){
         timeLabel = new Label("00:00");
         movesLabel = new Label("0");
+        timeTextLabel = new Label("Time:");
+        movesTextLabel = new Label("Moves:");
 
-        setObjectsPos(timeLabel,100,85);
-
+        setObjectsPos(timeLabel,90,118);
         timeLabel.getStyleClass().add("time-label");
 
-        setObjectsPos(movesLabel,120,180);
-        movesLabel.setStyle("-fx-font-size: 2em;");
-        movesLabel.setTextFill(Color.WHITE);
+        setObjectsPos(movesLabel,150,210);
+        movesLabel.getStyleClass().add("moves-label");
 
+        setObjectsPos(timeTextLabel,95,71);
+        timeTextLabel.getStyleClass().add("time-label");
+        
+        setObjectsPos(movesTextLabel,90,163);
+        movesTextLabel.getStyleClass().add("moves-label");
+        
         menuBtn = new Button("MENU");
         setObjectsPos(menuBtn,45,300);
         controller.setMenuButtonListener(menuBtn);
@@ -160,16 +168,14 @@ public class Renderer extends Pane{
 
 	public void loadGameWindow(List<Tile> tiles){
 	    gameStarted = true;
-	    if (!gamePaused.get())
-	        resetVars();
-
+	  
         GraphicsContext gc = backgroundCanvas.getGraphicsContext2D();
         gc.drawImage(gameBackgroundImage,0,0);
 
 		drawTiles(tiles);
 
 		this.getChildren().clear();
-		this.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel);
+		this.getChildren().addAll(backgroundCanvas,gameCanvas, menuBtn, timeLabel, movesLabel, timeTextLabel, movesTextLabel);
 	}
 
 
@@ -178,7 +184,7 @@ public class Renderer extends Pane{
 		movesLabel.setText(Integer.toString(moves));
 	}
 
-	public void updateTime(int seconds) {
+	public void updateTime(long seconds) {
         String min = (seconds/60<10 ? "0" : "" )+seconds/60;
         String sec = (seconds%60<10 ? "0" : "" )+seconds%60;
         StringBuilder time = new StringBuilder();
