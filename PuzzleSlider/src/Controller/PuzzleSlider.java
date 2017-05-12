@@ -115,6 +115,7 @@ public class PuzzleSlider extends Application {
 
 					file.setTitle("Save file");
 					file.setInitialDirectory(new File(System.getProperty("user.dir")));
+					file.getExtensionFilters().add(new FileChooser.ExtensionFilter("Saves", "*.sav"));
 					
 					saveFile = file.showSaveDialog(null);
 					
@@ -139,6 +140,7 @@ public class PuzzleSlider extends Application {
 					
 					file.setTitle("Load file");
 					file.setInitialDirectory(new File(System.getProperty("user.dir")));
+					file.getExtensionFilters().add(new FileChooser.ExtensionFilter("Saves", "*.sav"));
 					
 					loadFile = file.showOpenDialog(null);
 					
