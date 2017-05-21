@@ -1,5 +1,6 @@
 package Engine;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
@@ -13,6 +14,7 @@ public class Engine {
 
 	protected GameData mGameData;
 	
+
 	public Engine() throws InvalidArgumentException{
 		mGameData = new GameData(4);
 	}
@@ -45,7 +47,6 @@ public class Engine {
 				if ( emptyTile != null ) {
 					mGameData.switchTiles( emptyTile, point );
 					mGameData.incrementMoveCount();
-					mGameData.updateTimeCount();
 					return true;
 				}
 			}
@@ -91,12 +92,28 @@ public class Engine {
 		return null;
 	}
 	
-	public void saveGame(String fileName) throws FileNotFoundException, IOException{
-		mGameData.saveDataToFile(fileName);
+	public void saveGame(File file) throws FileNotFoundException, IOException{
+		mGameData.saveDataToFile(file);
 	}
 
-	public void loadGame(String fileName) throws FileNotFoundException, ClassNotFoundException, IOException{
-		GameData loadedGame = mGameData.loadDataFromFile(fileName);
+	public void loadGame(File file) throws FileNotFoundException, ClassNotFoundException, IOException{
+		GameData loadedGame = mGameData.loadDataFromFile(file);
 		mGameData = loadedGame;
+	}
+	
+	public GameData getGameData() {
+		return mGameData;
+	}
+	
+	public int getMoveCount() {
+		return mGameData.getMoveCount();
+	}
+	
+	public long getElapsedTime(){
+		return mGameData.getTimeCount();
+	}
+	
+	public void resumeTimeCounter(){
+		mGameData.setStartTime();
 	}
 }

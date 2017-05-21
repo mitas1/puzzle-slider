@@ -1,5 +1,6 @@
 package Engine;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -133,14 +134,14 @@ public class GameData implements Serializable {
 		return mTiles[coords.row][coords.column];
 	}
 	
-	public void saveDataToFile(String fileName) throws FileNotFoundException, IOException{
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileName));
+	public void saveDataToFile(File file) throws FileNotFoundException, IOException{
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
 		os.writeObject(this);
 		os.close();
 	}
 	
-	public GameData loadDataFromFile(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream is = new ObjectInputStream(new FileInputStream(fileName));
+	public GameData loadDataFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
+		ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
 		GameData loadedData =  (GameData) is.readObject();
 		is.close();
 		loadedData.mStartTime = getTimeInSeconds();
@@ -194,5 +195,14 @@ public class GameData implements Serializable {
 	
 	public boolean inProgress(){
 		return mState == GameState.IN_PROGRESS;
+	}
+
+	public long getTimeCount() {
+		updateTimeCount();
+		return mTimeCount;
+	}
+	
+	public void setStartTime(){
+		mStartTime = getTimeInSeconds();
 	}
 }

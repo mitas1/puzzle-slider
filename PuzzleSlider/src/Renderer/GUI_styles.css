@@ -1,0 +1,28 @@
+@font-face {
+    src: url('/resources/fonts/PermanentMarker.ttf');
+}
+
+.control-button {
+    -fx-font-family: 'Permanent Marker';
+    -fx-font-size: 52px;
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
+}
+
+.control-button:hover {
+    -fx-text-fill: #991c10;
+}
+
+.time-label {
+    -fx-font-family: 'Permanent Marker';
+    -fx-font-size: 45px;
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
+}
+
+.moves-label {
+	-fx-font-family: 'Permanent Marker';
+    -fx-font-size: 45px;
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
+}
