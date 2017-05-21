@@ -50,14 +50,28 @@ public class PuzzleSlider extends Application {
 				int tileSize = mRenderer.canvasWidth/size;
 				int row = (int)(event.getX()/tileSize);
 				int col = (int)(event.getY()/tileSize);
-				if (mEngine.move(row, col)) {
+				GridPoint emptyTile_temp = mEngine.findEmptyTileAround(new GridPoint(row,col));
+				if (mEngine.canMove(row, col)) {
 					List<Tile> tiles = new ArrayList<>();
 					try {
 						connectTiles(tiles);
 					} catch (UninitializedGameException | InvalidArgumentException e) {
 						e.printStackTrace();
 					}
-					mRenderer.drawTiles(tiles);
+					Tile clickedTile =  null;
+					Tile emptyTile = null;
+					try {
+						clickedTile = new Tile(row,col,tileSize,mEngine.getGameData().getTile(new GridPoint(row, col)));
+						emptyTile = new Tile(emptyTile_temp.row, emptyTile_temp.column, tileSize,mEngine.getGameData().getTile(new GridPoint(emptyTile_temp.row,emptyTile_temp.column)));
+					} catch (UninitializedGameException |InvalidArgumentException e) {
+						e.printStackTrace();
+					}
+
+					//mRenderer.drawTiles(tiles);
+					if (clickedTile != null && emptyTile != null){
+						mRenderer.animateTiles(clickedTile, emptyTile);
+					}
+					mEngine.move(row, col);
 					mRenderer.updateMoves(mEngine.getGameData().getMoveCount());
 				}
 			}

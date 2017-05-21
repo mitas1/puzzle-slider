@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import Controller.PuzzleSlider;
+import Engine.Globals.GridPoint;
 
 public class Renderer extends Pane{
 	public final int gameWindowWidth=1024;
@@ -202,6 +203,35 @@ public class Renderer extends Pane{
 		}
 		//tilesGraphicsContext.drawImage(picture,0,0);
 
+	}
+	
+	public void animateTiles(Tile clickedTile, Tile secondTile){
+		GraphicsContext tilesGraphicsContext = gameCanvas.getGraphicsContext2D();
+
+		if (clickedTile.getRow() == secondTile.getRow()){   
+			if (clickedTile.getColumn() > secondTile.getColumn()){
+				clickedTile.setGc(tilesGraphicsContext);
+				clickedTile.setStyle(0);
+				clickedTile.start();
+			}
+			else {
+				clickedTile.setGc(tilesGraphicsContext);
+				clickedTile.setStyle(1);
+				clickedTile.start();
+			}
+		}
+		else {	
+			if (clickedTile.getRow() > secondTile.getRow()){
+				clickedTile.setGc(tilesGraphicsContext);
+				clickedTile.setStyle(2);
+				clickedTile.start();
+			}	
+			else {
+				clickedTile.setGc(tilesGraphicsContext);
+				clickedTile.setStyle(3);
+				clickedTile.start();
+			}
+		}
 	}
 
 

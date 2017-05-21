@@ -39,6 +39,26 @@ public class Engine {
 		return move( new GridPoint(row, col) );
 	}
 	
+	public boolean canMove(int row, int col) {
+		return canMove( new GridPoint(row, col) );
+	}
+	
+	protected boolean canMove( GridPoint point ) {
+		try {
+			int selectedTile = mGameData.getTile( point );
+			if ( selectedTile > 0 ) {
+				GridPoint emptyTile = findEmptyTileAround( point );
+				if ( emptyTile != null ) {
+					return true;
+				}
+			}
+		}
+		catch ( UninitializedGameException e ) {} 
+		catch ( InvalidArgumentException e ) {}
+		
+		return false;
+	}
+	
 	protected boolean move( GridPoint point ) {
 		try {
 			int selectedTile = mGameData.getTile( point );
@@ -83,7 +103,7 @@ public class Engine {
 		return Math.abs(dist.row) + Math.abs(dist.column);
 	}
 	
-	protected GridPoint findEmptyTileAround( GridPoint point ) {
+	public GridPoint findEmptyTileAround( GridPoint point ) {
 		GridPoint emptyTilePoint = mGameData.getEmptyTile();
 		if ( getManhattanDistance( point, emptyTilePoint ) == 1 ) {
 			return emptyTilePoint;
