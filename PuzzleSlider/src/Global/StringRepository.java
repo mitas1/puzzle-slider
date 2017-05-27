@@ -11,7 +11,6 @@ public class StringRepository {
 	public static final String MENU_LABEL = "Menu";
 	
 	public static final String IMAGE_SOURCE_FOLDER = "/resources/images/";
-	public static final String IMAGE_FIREWORKS_FILENAME = "fireworks-icon.png";
 	
 	public static final String HEADING_NEW_GAME_DIALOG = "Game setup";
 	public static final String HEADING_IMAGE_FILE_DIALOG = "Choose a Picture";
