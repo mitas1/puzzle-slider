@@ -14,6 +14,7 @@ import Engine.Globals.GridPoint;
 import ExceptionHandling.ExceptionMessages;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UninitializedGameException;
+import Global.NumericalRepository;
 
 public class GameData implements Serializable {
 
@@ -32,7 +33,7 @@ public class GameData implements Serializable {
 	protected long mTimeCount;
 	
 	public GameData( int size ) throws InvalidArgumentException {
-		if (size < 4) {
+		if ( size < NumericalRepository.GAME_SIZE_MIN ) {
 			throw new InvalidArgumentException( ExceptionMessages.GameDimensions( size ) );
 		}
 		

@@ -2,6 +2,7 @@ package ImageProcessing;
 
 import ExceptionHandling.InvalidArgumentException;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 
@@ -18,6 +19,11 @@ public class ImageSlicer {
 			throw new InvalidArgumentException( "inputImg is too small ");
 		}
 	};
+	
+	public Image getBiggestSquare( Image sourceImage, int requestedSquareSide ) {
+		Image dstImage = getBiggestSquare(sourceImage);
+		return resizeTo( dstImage, requestedSquareSide );
+	}
 	
 	protected int getTileSize( Image inputImage, int gameSize ) {
 		return (int)Math.min( inputImage.getWidth(), inputImage.getHeight() ) / gameSize;
@@ -36,5 +42,20 @@ public class ImageSlicer {
 		
 		return tiles;
 	};
+	
+	protected WritableImage getBiggestSquare( Image sourceImg ) {
+		int srcSquareSide = (int)Math.min( sourceImg.getWidth(), sourceImg.getHeight() );
+		WritableImage dstImage = new WritableImage( srcSquareSide, srcSquareSide );
+		dstImage.getPixelWriter().setPixels(0, 0, srcSquareSide, srcSquareSide, sourceImg.getPixelReader(), 0, 0);
+		return dstImage;
+	}
+	
+	protected Image resizeTo(Image sourceImage, int side ) {
+		ImageView scalingView = new ImageView( sourceImage );
+		scalingView.setSmooth(true);
+		scalingView.setFitWidth(side);
+		scalingView.setFitHeight(side);
+		return scalingView.snapshot(null, null);
+	}
 	
 }

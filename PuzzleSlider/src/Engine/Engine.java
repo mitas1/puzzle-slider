@@ -30,7 +30,6 @@ public class Engine {
 		return mGameData.toString();
 	}
 
-
 	/**
 	 * Returns true if change was accessible, therefore applied. False returned otherwise (any exception, wrong arguments, etc.).
 	 */
