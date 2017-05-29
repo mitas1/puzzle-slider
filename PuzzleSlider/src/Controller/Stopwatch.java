@@ -9,6 +9,11 @@ public class Stopwatch {
 	Timeline mWorker;
 	long mElapsed;
 	
+	public void start( long startTime, int tickDelay, PuzzleSlider controller ) {
+		mElapsed = startTime;
+		start( tickDelay, controller );
+	}
+	
 	public void start( int tickDelay, PuzzleSlider controller ) {
 		mElapsed = 0;
 		
@@ -27,6 +32,10 @@ public class Stopwatch {
 	public void resume() {
 		mWorker.setCycleCount( Timeline.INDEFINITE );
 		mWorker.play();
+	}
+	
+	public long getElapsed() {
+		return mElapsed;
 	}
 	
 	public String getElapsedSecondsFormatted() {

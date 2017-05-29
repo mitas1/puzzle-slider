@@ -1,7 +1,8 @@
 package Engine;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 import Engine.Globals.GameMove;
@@ -90,12 +91,12 @@ public class Engine {
 		return null;
 	}
 	
-	public void saveGame(String fileName) throws FileNotFoundException, IOException{
-		mGameData.saveDataToFile(fileName);
+	public void saveGame( OutputStream stream ) throws IOException {
+		mGameData.saveDataToFile( stream );
 	}
 
-	public void loadGame(String fileName) throws FileNotFoundException, ClassNotFoundException, IOException{
-		GameData loadedGame = mGameData.loadDataFromFile(fileName);
+	public void loadGame( InputStream stream ) throws ClassNotFoundException, IOException {
+		GameData loadedGame = mGameData.loadDataFromFile( stream );
 		mGameData = loadedGame;
 	}
 	

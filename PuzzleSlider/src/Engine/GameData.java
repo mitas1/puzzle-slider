@@ -1,11 +1,10 @@
 package Engine;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -127,14 +126,14 @@ public class GameData implements Serializable {
 		return mTiles[coords.row][coords.column];
 	}
 	
-	public void saveDataToFile(String fileName) throws FileNotFoundException, IOException{
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileName));
+	public void saveDataToFile( OutputStream stream ) throws IOException {
+		ObjectOutputStream os = new ObjectOutputStream( stream );
 		os.writeObject(this);
 		os.close();
 	}
 	
-	public GameData loadDataFromFile(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream is = new ObjectInputStream(new FileInputStream(fileName));
+	public GameData loadDataFromFile( InputStream stream ) throws IOException, ClassNotFoundException {
+		ObjectInputStream is = new ObjectInputStream( stream );
 		GameData loadedData =  (GameData) is.readObject();
 		is.close();
 		return loadedData;

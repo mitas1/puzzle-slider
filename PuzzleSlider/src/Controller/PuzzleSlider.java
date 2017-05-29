@@ -1,7 +1,12 @@
 package Controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.ByteBuffer;
 import java.util.Optional;
 
 import Engine.Engine;
@@ -124,12 +129,79 @@ public class PuzzleSlider extends Application {
 	private void initializeSaveGameButton() {
 		mUiObjects.saveGameButton = new Button();
 		mUiObjects.saveGameButton.disableProperty().bind( getPausedProperty().not() );
-		// TODO:
+		mUiObjects.saveGameButton.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				saveGame();
+			}
+		});
+	}
+	
+	protected void saveGame() {
+		File saveFile = mRenderer.drawSaveFileDialog(
+				mUiObjects.root,
+				StringRepository.LABEL_SAVELOAD_DIALOG_HEADER,
+				JavaFxUtils.getImageExtensionFilter( new FileExtension( StringRepository.FORMAT_SAVE_LABEL, StringRepository.FORMAT_SAVE_EXT ) )
+		);
+		
+		if ( saveFile != null ) {
+			try {
+				FileOutputStream stream = new FileOutputStream( saveFile );
+				stream.write( 
+					ByteBuffer.allocate(Long.BYTES).putLong( mGameElapsedTime.getElapsed() ).array() 
+				);
+				// TODO: save image path if it was image game?
+				mEngine.saveGame( stream );
+			} catch (IOException e) {
+				e.printStackTrace();
+				// TODO: error window
+			}
+		}
 	}
 	
 	private void initializeLoadGameButton() {
 		mUiObjects.loadGameButton = new Button();
-		// TODO:
+		mUiObjects.loadGameButton.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				loadGame();
+			}
+		});
+	}
+	
+	protected void loadGame() {
+		File gameFile = mRenderer.drawOpenFileDialog(
+				mUiObjects.root, 
+				StringRepository.LABEL_SAVELOAD_DIALOG_HEADER, 
+				JavaFxUtils.getImageExtensionFilter( new FileExtension(StringRepository.FORMAT_SAVE_LABEL, StringRepository.FORMAT_SAVE_EXT) ) 
+		);
+		
+		if ( gameFile != null && gameFile.canRead() ) {
+			try {
+				FileInputStream stream = new FileInputStream( gameFile );
+				long elapsedTime = loadElapsedTime( stream );
+				mGameElapsedTime.start( elapsedTime, NumericalRepository.GAME_STOPWATCH_DELAY_MS, this);
+				mEngine.loadGame( stream );
+				
+				// TODO: tiles, game window, etc.
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				// TODO: invalid file error window
+			} catch (IOException e) {
+				e.printStackTrace();
+				// TODO: unknown error window
+			}
+		}
+	}
+	
+	protected long loadElapsedTime( InputStream stream ) throws IOException {
+		byte[] tmpBuffer = new byte[ Long.BYTES ];
+		stream.read( tmpBuffer, 0, Long.BYTES);
+		ByteBuffer convertBuffer = ByteBuffer.allocate( Long.BYTES );
+		convertBuffer.put( tmpBuffer );
+		convertBuffer.flip();
+		return convertBuffer.getLong();
 	}
 	
 	private void initializeExitButton() {
