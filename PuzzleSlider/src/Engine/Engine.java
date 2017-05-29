@@ -45,7 +45,6 @@ public class Engine {
 				if ( emptyTile != null ) {
 					mGameData.switchTiles( emptyTile, point );
 					mGameData.incrementMoveCount();
-					mGameData.updateTimeCount();
 					return true;
 				}
 			}

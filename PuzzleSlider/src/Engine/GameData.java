@@ -19,7 +19,6 @@ import Global.NumericalRepository;
 public class GameData implements Serializable {
 
 	private static final long serialVersionUID = 854452780857028700L;
-	private final long BILLION = 1000000000;
 	
 	protected int[][] mTiles;
 	protected GridPoint mBlankSpot;
@@ -29,8 +28,6 @@ public class GameData implements Serializable {
 	protected int mCorrectTiles;
 	
 	protected int mMoveCount;
-	protected long mStartTime;
-	protected long mTimeCount;
 	
 	public GameData( int size ) throws InvalidArgumentException {
 		if ( size < NumericalRepository.GAME_SIZE_MIN ) {
@@ -54,8 +51,6 @@ public class GameData implements Serializable {
 		}
 		out.append("Moves: " + mMoveCount);
 		out.append(System.lineSeparator());
-		out.append("Time: " + mTimeCount + " seconds");
-		out.append(System.lineSeparator());
 		return out.toString();
 	}
 	
@@ -75,8 +70,6 @@ public class GameData implements Serializable {
 	
 	public void initCounters(){
 		mMoveCount = 0;
-		mTimeCount = 0;
-		mStartTime = getTimeInSeconds();
 	}
 	
 	protected boolean checkValidPoint( GridPoint point ) {
@@ -144,7 +137,6 @@ public class GameData implements Serializable {
 		ObjectInputStream is = new ObjectInputStream(new FileInputStream(fileName));
 		GameData loadedData =  (GameData) is.readObject();
 		is.close();
-		loadedData.mStartTime = getTimeInSeconds();
 		return loadedData;
 	}
 	
@@ -166,20 +158,6 @@ public class GameData implements Serializable {
 	
 	public void incrementMoveCount(){
 		mMoveCount++;
-	}
-	
-	public void updateTimeCount(){
-		long currentTime = getTimeInSeconds();
-		mTimeCount += currentTime - mStartTime;
-		mStartTime = currentTime;
-	}
-	
-	public long getStartTime(){
-		return mStartTime;
-	}
-	
-	protected long getTimeInSeconds(){
-		return System.nanoTime() / BILLION;
 	}
 	
 	protected void checkFinished() {
