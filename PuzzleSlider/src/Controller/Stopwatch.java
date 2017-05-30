@@ -11,11 +11,6 @@ public class Stopwatch {
 	
 	public void start( long startTime, int tickDelay, PuzzleSlider controller ) {
 		mElapsed = startTime;
-		start( tickDelay, controller );
-	}
-	
-	public void start( int tickDelay, PuzzleSlider controller ) {
-		mElapsed = 0;
 		
 		mWorker = new Timeline( new KeyFrame( Duration.millis( tickDelay ), e -> {
 			mElapsed += tickDelay;
@@ -23,6 +18,10 @@ public class Stopwatch {
 		} ) );
 		
 		resume();
+	}
+	
+	public void start( int tickDelay, PuzzleSlider controller ) {
+		start( 0, tickDelay, controller );
 	}
 	
 	public void pause() {

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
@@ -45,6 +47,7 @@ public class PuzzleSlider extends Application {
 	Stopwatch mGameElapsedTime;
 	SimpleBooleanProperty mGamePaused;
 	
+	NewGameProperties mCurrentGameProperties;
 	String mImagePathTemp;
 
 	public static void main(String[] args) {
@@ -146,17 +149,19 @@ public class PuzzleSlider extends Application {
 		
 		if ( saveFile != null ) {
 			try {
-				FileOutputStream stream = new FileOutputStream( saveFile );
-				stream.write( 
-					ByteBuffer.allocate(Long.BYTES).putLong( mGameElapsedTime.getElapsed() ).array() 
-				);
-				// TODO: save image path if it was image game?
+				ObjectOutputStream stream = new ObjectOutputStream( new FileOutputStream( saveFile ) );	
+				updateCurrentGameProperties();
+				stream.writeObject( mCurrentGameProperties );
 				mEngine.saveGame( stream );
 			} catch (IOException e) {
 				e.printStackTrace();
 				// TODO: error window
 			}
 		}
+	}
+	
+	protected void updateCurrentGameProperties() {
+		mCurrentGameProperties.elapsedTime = mGameElapsedTime.getElapsed();
 	}
 	
 	private void initializeLoadGameButton() {
@@ -178,30 +183,26 @@ public class PuzzleSlider extends Application {
 		
 		if ( gameFile != null && gameFile.canRead() ) {
 			try {
-				FileInputStream stream = new FileInputStream( gameFile );
-				long elapsedTime = loadElapsedTime( stream );
-				mGameElapsedTime.start( elapsedTime, NumericalRepository.GAME_STOPWATCH_DELAY_MS, this);
+				ObjectInputStream stream = new ObjectInputStream( new FileInputStream( gameFile ) );
+				mCurrentGameProperties = (NewGameProperties)stream.readObject();
 				mEngine.loadGame( stream );
 				
-				// TODO: tiles, game window, etc.
+				initializeGameScreen( mCurrentGameProperties );
+				initializeAndDrawTiles( mCurrentGameProperties );
+				
+				mGameElapsedTime.pause();
+				mGameElapsedTime.start( mCurrentGameProperties.elapsedTime, NumericalRepository.GAME_STOPWATCH_DELAY_MS, this);
+				mRenderer.updateGameTime( mUiObjects, mGameElapsedTime.getElapsedSecondsFormatted() );
+				mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 				
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				// TODO: invalid file error window
-			} catch (IOException e) {
+			} catch ( IOException | InvalidArgumentException | UninitializedGameException e ) {
 				e.printStackTrace();
 				// TODO: unknown error window
 			}
 		}
-	}
-	
-	protected long loadElapsedTime( InputStream stream ) throws IOException {
-		byte[] tmpBuffer = new byte[ Long.BYTES ];
-		stream.read( tmpBuffer, 0, Long.BYTES);
-		ByteBuffer convertBuffer = ByteBuffer.allocate( Long.BYTES );
-		convertBuffer.put( tmpBuffer );
-		convertBuffer.flip();
-		return convertBuffer.getLong();
 	}
 	
 	private void initializeExitButton() {
@@ -255,8 +256,8 @@ public class PuzzleSlider extends Application {
 	protected void processNewGameDialogResult( Optional<ButtonType> result, NewGameDialogUiObjects dialogObjects ) {
 		if ( result.isPresent() ) {
 			if ( result.get().getButtonData() == ButtonData.OK_DONE ) {
-				NewGameProperties properties = getNewGameProperties( dialogObjects );
-				startNewGame( properties );
+				mCurrentGameProperties = getNewGameProperties( dialogObjects );
+				startNewGame( mCurrentGameProperties );
 			}
 			mImagePathTemp = null;
 		}
@@ -278,15 +279,23 @@ public class PuzzleSlider extends Application {
 	protected void startNewGame( NewGameProperties properties ) {
 		try {
 			mEngine = new Engine( properties.gameSize );
-			initializeTiles( properties );
-			initializeGameWindow();
-			mRenderer.drawGameWindow( mUiObjects );
-			mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
-			mGamePaused.set(false);
+			initializeGameScreen( properties );
+			initializeAndDrawTiles( properties );
 		}
 		catch ( InvalidArgumentException | UninitializedGameException e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected void initializeGameScreen( NewGameProperties properties ) {
+		initializeGameWindow();
+		mRenderer.drawGameWindow( mUiObjects );
+		mGamePaused.set(false);
+	}
+	
+	protected void initializeAndDrawTiles( NewGameProperties properties ) throws InvalidArgumentException, UninitializedGameException {
+		initializeTiles( properties );
+		mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
 	}
 	
 	protected void initializeGameWindow() {
