@@ -19,6 +19,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -88,10 +90,16 @@ public class Renderer extends Pane{
 	}
     
     public void drawGameWindow( GlobalUiObjects uiObjects ) {
+    	Image menuSnapshot = uiObjects.root.getScene().snapshot(null);
+    	
     	mRootPane.getChildren().clear();
     	
     	GameScreenLayout layout = new GameScreenLayout();
     	layout.setLayout( uiObjects, mRootPane );
+    	
+    	Image gameSnapshot = uiObjects.root.getScene().snapshot(null);
+    	
+    	doToGameTransition( menuSnapshot, gameSnapshot );
     }
     
     public void updateGameTime( GlobalUiObjects uiObjects, String timeString ) {
@@ -159,5 +167,48 @@ public class Renderer extends Pane{
     	
     	return null;
     }
-
+    
+    public void onReturnToMenu( GlobalUiObjects uiObjects ) {
+    	Image gameScreenSnapshot = uiObjects.root.getScene().snapshot( null );
+    	
+    	drawMenu( uiObjects );
+    	
+    	doToMenuTransition( gameScreenSnapshot );
+    }
+    
+    protected void doToGameTransition( Image menuImage, Image gameImage ) {
+		ImageView menuView = new ImageView( menuImage );
+		ImageView gameView = new ImageView( gameImage );
+		gameView.setLayoutX( gameView.getLayoutBounds().getWidth() );
+		
+		mRootPane.getChildren().addAll( menuView, gameView );
+		
+		EventHandler<ActionEvent> onTransitionDone = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				mRootPane.getChildren().removeAll( menuView, gameView );
+			}
+		};
+		
+		mAnimationEngine.playSlideNoOverlay( 
+			gameView, 0, 0, AnimationEngine.DEFAULT_SNAPSHOT_SLIDE_DURATION_MS, onTransitionDone 
+		);
+    }
+    
+    protected void doToMenuTransition( Image gameImage ) {
+		ImageView gameView = new ImageView( gameImage );
+		
+		mRootPane.getChildren().add( gameView );
+		
+		EventHandler<ActionEvent> onTransitionDone = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				mRootPane.getChildren().remove( gameView );
+			}
+		};
+		
+		mAnimationEngine.playSlideNoOverlay( 
+			gameView, gameView.getLayoutBounds().getWidth(), 0, AnimationEngine.DEFAULT_SNAPSHOT_SLIDE_DURATION_MS, onTransitionDone 
+		);
+	}
 }

@@ -318,8 +318,6 @@ public class PuzzleSlider extends Application {
 					GridPoint emptyTileNew = new GridPoint( row, col );
 					
 					mRenderer.onValidMove( mUiObjects, emptyTileOld, emptyTileNew );
-					
-					// mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
 					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 					
 					if ( mEngine.isFinished() ) {
@@ -343,7 +341,7 @@ public class PuzzleSlider extends Application {
 	protected void pauseGame() {
 		switchPausedState();
 		mGameElapsedTime.pause();
-		mRenderer.drawMenu( mUiObjects );
+		mRenderer.onReturnToMenu( mUiObjects );
 	}
 	
 	protected void initializeGameScreenLabels() {

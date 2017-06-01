@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 public class AnimationEngine {
 	
 	protected final long DEFAULT_TILE_SLIDE_DURATION_MS = 200;
+	public static final long DEFAULT_SNAPSHOT_SLIDE_DURATION_MS = 400;
 	
 	Pane mOverlay;
 	
@@ -39,6 +40,11 @@ public class AnimationEngine {
 		
 		Animation animation = new LinearSlideAnimation( dstX, dstY, DEFAULT_TILE_SLIDE_DURATION_MS );
 		animation.play( tile, onFinished );
+	}
+	
+	public void playSlideNoOverlay( Node object, double dstX, double dstY, long durationMs, EventHandler<ActionEvent> onFinished ) {
+		Animation animation = new LinearSlideAnimation( dstX, dstY, durationMs );
+		animation.play( object, onFinished );
 	}
 
 }
