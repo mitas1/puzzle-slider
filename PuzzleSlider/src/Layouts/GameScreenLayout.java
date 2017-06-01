@@ -8,7 +8,10 @@ import UiObjects.GlobalUiObjects;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 
 public class GameScreenLayout extends ScreenLayout {
 
@@ -78,5 +81,6 @@ public class GameScreenLayout extends ScreenLayout {
 		uiObjects.gamePane.setPrefSize( NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH, NumericalRepository.LAYOUT_GAME_CANVAS_HEIGHT );
 		uiObjects.gamePane.setMaxSize( NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH, NumericalRepository.LAYOUT_GAME_CANVAS_HEIGHT );
 		uiObjects.gamePane.setAlignment( Pos.CENTER );
+		uiObjects.gamePane.setBackground( new Background( new BackgroundFill( Paint.valueOf("0x000000"), null, null)));
 	}
 }

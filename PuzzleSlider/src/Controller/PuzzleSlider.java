@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
-import java.nio.ByteBuffer;
 import java.util.Optional;
 
 import Engine.Engine;
+import Engine.Globals.GridPoint;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UninitializedGameException;
 import Global.FileExtension;
@@ -313,8 +312,14 @@ public class PuzzleSlider extends Application {
 				int row = (int)( event.getSceneY() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_Y )  / tileSize;
 				int col = (int)( event.getSceneX() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_X ) / tileSize;
 				
+				
+				GridPoint emptyTileOld = mEngine.getGameData().getEmptyTile();
 				if ( mEngine.move(row, col) ) {
-					mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
+					GridPoint emptyTileNew = new GridPoint( row, col );
+					
+					mRenderer.onValidMove( mUiObjects, emptyTileOld, emptyTileNew );
+					
+					// mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
 					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 					
 					if ( mEngine.isFinished() ) {
