@@ -9,8 +9,8 @@ public class Stopwatch {
 	Timeline mWorker;
 	long mElapsed;
 	
-	public void start( int tickDelay, PuzzleSlider controller ) {
-		mElapsed = 0;
+	public void start( long startTime, int tickDelay, PuzzleSlider controller ) {
+		mElapsed = startTime;
 		
 		mWorker = new Timeline( new KeyFrame( Duration.millis( tickDelay ), e -> {
 			mElapsed += tickDelay;
@@ -20,6 +20,10 @@ public class Stopwatch {
 		resume();
 	}
 	
+	public void start( int tickDelay, PuzzleSlider controller ) {
+		start( 0, tickDelay, controller );
+	}
+	
 	public void pause() {
 		mWorker.stop();
 	}
@@ -27,6 +31,10 @@ public class Stopwatch {
 	public void resume() {
 		mWorker.setCycleCount( Timeline.INDEFINITE );
 		mWorker.play();
+	}
+	
+	public long getElapsed() {
+		return mElapsed;
 	}
 	
 	public String getElapsedSecondsFormatted() {

@@ -64,11 +64,21 @@ public class Renderer extends Pane{
     }
     
     public File drawOpenFileDialog( Window parent, String heading, ExtensionFilter filter ) {
-    	final FileChooser fileDialog = new FileChooser();
-    	fileDialog.setTitle( heading );
-    	fileDialog.getExtensionFilters().setAll( filter );
+    	final FileChooser fileDialog = getFileDialog(heading, filter);
     	return fileDialog.showOpenDialog( parent );
     }
+    
+    public File drawSaveFileDialog( Window parent, String heading, ExtensionFilter filter ) {
+    	final FileChooser fileDialog = getFileDialog(heading, filter);
+    	return fileDialog.showSaveDialog( parent );
+    }
+
+	protected FileChooser getFileDialog(String heading, ExtensionFilter filter) {
+		FileChooser fileDialog = new FileChooser();
+    	fileDialog.setTitle( heading );
+    	fileDialog.getExtensionFilters().setAll( filter );
+		return fileDialog;
+	}
     
     public void drawGameWindow( GlobalUiObjects uiObjects ) {
     	mRootPane.getChildren().clear();

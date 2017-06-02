@@ -98,4 +98,7 @@ public class ImageSlicerTest {
 	}
 	
 	// can't test tile-ing, coz java and it's color encoding....fucking hell...
+	
+	// FUCK JAVAFX, literally...can't even write fucking tests
+	// image resizing must run on FX thread? G to the fucking G.........
 }
