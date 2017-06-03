@@ -384,6 +384,8 @@ public class PuzzleSlider extends Application {
 		for ( int i = 0; i < tileImages.length; i++ ) {
 			mUiObjects.gameTiles[i] = new ImageTile( tileSize, tileSize, tileImages[i] );
 		}
+		
+		mRenderer.initializeEndGameAnimation( sourceImage );
 	}
 	
 	protected SimpleBooleanProperty getPausedProperty() {
@@ -397,9 +399,9 @@ public class PuzzleSlider extends Application {
 	protected void endGame() {
 		mGameElapsedTime.pause();
 	
-		Optional<ButtonType> result = mRenderer.drawWinDialog( mUiObjects.root );
+		Optional<ButtonType> result = mRenderer.onGameWon( mUiObjects, mCurrentGameProperties.hasImageTiles );
 		
-		if ( result.isPresent() ) {
+		if ( ( result != null ) && result.isPresent() ) {
 			switch ( result.get().getText() ) {
 			case StringRepository.NEW_GAME:
 				showNewGameDialog();
@@ -410,5 +412,4 @@ public class PuzzleSlider extends Application {
 			}
 		}
 	}
-	
 }
