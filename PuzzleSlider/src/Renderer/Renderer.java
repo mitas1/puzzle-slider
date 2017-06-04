@@ -28,7 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 
-public class Renderer extends Pane{
+public class Renderer extends Pane {
     
     protected Pane mRootPane;
     protected AnimationEngine mAnimationEngine;
@@ -57,7 +57,7 @@ public class Renderer extends Pane{
     	mRootPane.getChildren().clear();
 
     	ScreenLayout layout = new MainMenuLayout();
-    	layout.setLayout(uiObjects, mRootPane );	
+    	layout.setLayout(uiObjects, mRootPane );
     }
     
     public Optional<ButtonType> drawNewGameDialog( NewGameDialogUiObjects dialogUiObjects, Window parent ) {
@@ -128,7 +128,15 @@ public class Renderer extends Pane{
     	}
     }
     
-    public Optional<ButtonType> drawWinDialog( Window parent ) {
+    public Optional<ButtonType> onGameWon( GlobalUiObjects uiObjects, boolean isImageGame ) {
+    	if ( isImageGame ) {
+    		mRootPane.getChildren().remove( uiObjects.gamePane );		
+    		mAnimationEngine.playEngGameImageAnimation( mRootPane, null );
+    	}
+    	return drawWinDialog( uiObjects.root );
+    }
+    
+    protected Optional<ButtonType> drawWinDialog( Window parent ) {
     	Dialog<ButtonType> dialog = new Dialog<>();
     	dialog.initOwner( parent );
     	
@@ -211,4 +219,8 @@ public class Renderer extends Pane{
 			gameView, gameView.getLayoutBounds().getWidth(), 0, AnimationEngine.DEFAULT_SNAPSHOT_SLIDE_DURATION_MS, onTransitionDone 
 		);
 	}
+    
+    public void initializeEndGameAnimation( Image sourceImage ) {
+    	mAnimationEngine.createEngGameImageAnimation( sourceImage );
+    }
 }
