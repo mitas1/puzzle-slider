@@ -9,7 +9,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class NumberedTile extends Tile {
-
+	
+	protected static final double FONT_SCALE_SWEETSPOT = 0.6;
+	
 	int mNumber;
 	Node mJavaFxObject;
 	
@@ -27,7 +29,7 @@ public class NumberedTile extends Tile {
 	@Override
 	public void setToEmpty() {
 		Rectangle empty = new Rectangle(mWidth, mHeight);
-		empty.setFill( Paint.valueOf("0x000000"));
+		empty.setFill( Paint.valueOf( "0x000000" ) );
 		mJavaFxObject = empty;
 		mNumber = 0;
 	}
@@ -38,11 +40,11 @@ public class NumberedTile extends Tile {
 		StackPane base = new StackPane();
 		
 		Rectangle rectangle = new Rectangle( mWidth, mHeight );
-		rectangle.setFill( Paint.valueOf( "0x000000" ));
+		rectangle.setFill( Paint.valueOf( "0x000000" ) );
 		
-		Label numberLabel = new Label( String.format("%d", mNumber) );
-		numberLabel.setFont( new Font("Permanent Marker", 22) );
-		numberLabel.setTextFill( Paint.valueOf("0xFFFFFF") );
+		Label numberLabel = new Label( String.format( "%d", mNumber) );
+		numberLabel.setFont( new Font( "Permanent Marker", mWidth * FONT_SCALE_SWEETSPOT ) );
+		numberLabel.setTextFill( Paint.valueOf( "0xFFFFFF" ) );
 		numberLabel.setAlignment( Pos.CENTER );
 		
 		base.getChildren().addAll( rectangle, numberLabel );
