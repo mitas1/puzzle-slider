@@ -1,8 +1,8 @@
 package Engine;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 import Engine.Globals.GameMove;
@@ -30,7 +30,6 @@ public class Engine {
 	public String toString() {
 		return mGameData.toString();
 	}
-
 
 	/**
 	 * Returns true if change was accessible, therefore applied. False returned otherwise (any exception, wrong arguments, etc.).
@@ -92,28 +91,16 @@ public class Engine {
 		return null;
 	}
 	
-	public void saveGame(File file) throws FileNotFoundException, IOException{
-		mGameData.saveDataToFile(file);
+	public void saveGame( OutputStream stream ) throws IOException {
+		mGameData.saveDataToFile( stream );
 	}
 
-	public void loadGame(File file) throws FileNotFoundException, ClassNotFoundException, IOException{
-		GameData loadedGame = mGameData.loadDataFromFile(file);
+	public void loadGame( InputStream stream ) throws ClassNotFoundException, IOException {
+		GameData loadedGame = mGameData.loadDataFromFile( stream );
 		mGameData = loadedGame;
 	}
 	
 	public GameData getGameData() {
 		return mGameData;
-	}
-	
-	public int getMoveCount() {
-		return mGameData.getMoveCount();
-	}
-	
-	public long getElapsedTime(){
-		return mGameData.getTimeCount();
-	}
-	
-	public void resumeTimeCounter(){
-		mGameData.setStartTime();
 	}
 }

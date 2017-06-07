@@ -1,204 +1,415 @@
 package Controller;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
+import java.util.Optional;
 
 import Engine.Engine;
 import Engine.Globals.GridPoint;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UninitializedGameException;
+import Global.FileExtension;
+import Global.NumericalRepository;
+import Global.StringRepository;
+import ImageProcessing.ImageSlicer;
+import Renderer.JavaFxUtils;
 import Renderer.Renderer;
-import Renderer.Tile;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import Tiles.ImageTile;
+import Tiles.NumberedTile;
+import Tiles.Tile;
+import UiObjects.GlobalUiObjects;
+import UiObjects.NewGameDialogUiObjects;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class PuzzleSlider extends Application {
 
 	Engine mEngine;
 	Renderer mRenderer;
-	Timeline timeCounter;
+	GlobalUiObjects mUiObjects;
+	Stopwatch mGameElapsedTime;
+	SimpleBooleanProperty mGamePaused;
+	
+	NewGameProperties mCurrentGameProperties;
+	String mImagePathTemp;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	//------------------------------------------------------------
+	//	Controller main systems
+	//------------------------------------------------------------
+	
 	@Override
 	public void start(Stage primaryStage) {
+		initializeSubsystems();
+		
+		mUiObjects.root = primaryStage;
+		drawRootWindow();
+		
+		initializeMenu( primaryStage );
+		drawMenu();
+	}
+	
+	private void initializeSubsystems() {
 		try {
 			mEngine = new Engine();
 		} catch (InvalidArgumentException e) {}
-		mRenderer = new Renderer(primaryStage, this);
+		
+		mRenderer = new Renderer();
+		mUiObjects = new GlobalUiObjects();
+		mGameElapsedTime = new Stopwatch();
+		mGamePaused = new SimpleBooleanProperty(false);
+	}
+	
+	private void drawRootWindow() {
+		mRenderer.drawRootWindow( mUiObjects );
+	}
+	
+	//------------------------------------------------------------
+	//	Main menu
+	//------------------------------------------------------------
+	
+	private void initializeMenu( Stage root ) {
+		initialzieNewGameButton();
+		initializeResumeGameButton();
+		initializeSaveGameButton();
+		initializeLoadGameButton();
+		initializeExitButton();
+	}
+	
+	private void drawMenu() {
+		mRenderer.drawMenu( mUiObjects );
 	}
 
-	public void setOnClickListener(Canvas canvas){
-
-		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				int size = mEngine.getGameData().getSize();
-				int tileSize = mRenderer.canvasWidth/size;
-				int row = (int)(event.getX()/tileSize);
-				int col = (int)(event.getY()/tileSize);
-				if (mEngine.move(row, col)) {
-					List<Tile> tiles = new ArrayList<>();
-					try {
-						connectTiles(tiles);
-					} catch (UninitializedGameException | InvalidArgumentException e) {
-						e.printStackTrace();
-					}
-					mRenderer.drawTiles(tiles);
-					mRenderer.updateMoves(mEngine.getGameData().getMoveCount());
-				}
-			}
-		});
-	}
-
-	public void setNewGameListener(Button newGameBtn) {
-		newGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+	private void initialzieNewGameButton() {
+		mUiObjects.newGameButton = new Button();
+		mUiObjects.newGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				mRenderer.newGameDialog.showAndWait();
-				//TODO Check
+				showNewGameDialog();
 			}
 		});
 	}
-
-
-	private void connectTiles(List<Tile> tiles) throws UninitializedGameException, InvalidArgumentException {
-		int size = mEngine.getGameData().getSize();
-		int tileSize = mRenderer.canvasWidth/size;
-		for (int i = 0; i < size; i++){
-			for (int j = 0;j < size; j++){
-				tiles.add(new Tile(j,i,tileSize,mEngine.getGameData().getTile(new GridPoint(j, i))));
+	
+	private void initializeResumeGameButton() {
+		mUiObjects.resumeGameButton = new Button();
+		mUiObjects.resumeGameButton.disableProperty().bind( getPausedProperty().not() );
+		mUiObjects.resumeGameButton.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				resumeGame();
+			}
+		});
+	}
+	
+	protected void resumeGame() {
+		switchPausedState();
+		mRenderer.drawGameWindow( mUiObjects );
+		mRenderer.updateGameTime( mUiObjects, mGameElapsedTime.getElapsedSecondsFormatted() );
+		mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
+		mGameElapsedTime.resume();
+	}
+	
+	private void initializeSaveGameButton() {
+		mUiObjects.saveGameButton = new Button();
+		mUiObjects.saveGameButton.disableProperty().bind( getPausedProperty().not() );
+		mUiObjects.saveGameButton.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				saveGame();
+			}
+		});
+	}
+	
+	protected void saveGame() {
+		File saveFile = mRenderer.drawSaveFileDialog(
+				mUiObjects.root,
+				StringRepository.LABEL_SAVELOAD_DIALOG_HEADER,
+				JavaFxUtils.getImageExtensionFilter( new FileExtension( StringRepository.FORMAT_SAVE_LABEL, StringRepository.FORMAT_SAVE_EXT ) )
+		);
+		
+		if ( saveFile != null ) {
+			try {
+				ObjectOutputStream stream = new ObjectOutputStream( new FileOutputStream( saveFile ) );	
+				updateCurrentGameProperties();
+				stream.writeObject( mCurrentGameProperties );
+				mEngine.saveGame( stream );
+			} catch (IOException e) {
+				e.printStackTrace();
+				// TODO: error window
 			}
 		}
 	}
-
-	public void setMenuButtonListener(Button menuBtn) {
-		menuBtn.setOnAction(new EventHandler<ActionEvent>() {
+	
+	protected void updateCurrentGameProperties() {
+		mCurrentGameProperties.elapsedTime = mGameElapsedTime.getElapsed();
+	}
+	
+	private void initializeLoadGameButton() {
+		mUiObjects.loadGameButton = new Button();
+		mUiObjects.loadGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				mRenderer.showMenu();
-				stopClock();
+				loadGame();
 			}
 		});
 	}
-
-	public void setQuitGameListener(Button quitGameBtn) {
-		quitGameBtn.setOnAction(new EventHandler<ActionEvent>() {
+	
+	protected void loadGame() {
+		File gameFile = mRenderer.drawOpenFileDialog(
+				mUiObjects.root, 
+				StringRepository.LABEL_SAVELOAD_DIALOG_HEADER, 
+				JavaFxUtils.getImageExtensionFilter( new FileExtension(StringRepository.FORMAT_SAVE_LABEL, StringRepository.FORMAT_SAVE_EXT) ) 
+		);
+		
+		if ( gameFile != null && gameFile.canRead() ) {
+			try {
+				ObjectInputStream stream = new ObjectInputStream( new FileInputStream( gameFile ) );
+				mCurrentGameProperties = (NewGameProperties)stream.readObject();
+				mEngine.loadGame( stream );
+				
+				initializeGameScreen( mCurrentGameProperties );
+				initializeAndDrawTiles( mCurrentGameProperties );
+				
+				mGameElapsedTime.pause();
+				mGameElapsedTime.start( mCurrentGameProperties.elapsedTime, NumericalRepository.GAME_STOPWATCH_DELAY_MS, this);
+				mRenderer.updateGameTime( mUiObjects, mGameElapsedTime.getElapsedSecondsFormatted() );
+				mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+				// TODO: invalid file error window
+			} catch ( IOException | InvalidArgumentException | UninitializedGameException e ) {
+				e.printStackTrace();
+				// TODO: unknown error window
+			}
+		}
+	}
+	
+	private void initializeExitButton() {
+		mUiObjects.exitButton = new Button();
+		mUiObjects.exitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				Platform.exit();
 			}
-
-		});
-	}
-
-	public void setSaveGameListener(Button saveGameBtn) {
-		saveGameBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					File saveFile;
-					FileChooser file = new FileChooser();
-
-					file.setTitle("Save file");
-					file.setInitialDirectory(new File(System.getProperty("user.dir")));
-					file.getExtensionFilters().add(new FileChooser.ExtensionFilter("Saves", "*.sav"));
-					
-					saveFile = file.showSaveDialog(null);
-					
-					if (saveFile != null){
-						mEngine.saveGame(saveFile);
-					}
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public void setLoadGameListener(Button loadGameBtn) {
-		loadGameBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					File loadFile;
-					FileChooser file = new FileChooser();
-					
-					file.setTitle("Load file");
-					file.setInitialDirectory(new File(System.getProperty("user.dir")));
-					file.getExtensionFilters().add(new FileChooser.ExtensionFilter("Saves", "*.sav"));
-					
-					loadFile = file.showOpenDialog(null);
-					
-					if (loadFile != null){
-						mEngine.loadGame(loadFile);
-						
-						mRenderer.updateMoves(mEngine.getMoveCount());
-						showPlayScreen();
-					}
-				} catch (ClassNotFoundException | IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public void setResumeGameListener(Button resumeGameBtn) {
-		resumeGameBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				showPlayScreen();
-			}
-
-		});
+		} );
 	}
 	
-	//TODO Check controller team
-	public void startNewGame(int gameSize) {
-		try {
-			mEngine = new Engine(gameSize);
-			mRenderer.updateMoves(0);
-			showPlayScreen();
-		} catch (InvalidArgumentException e) {
-			e.printStackTrace();
+	//------------------------------------------------------------
+	// New Game dialog
+	//------------------------------------------------------------
+	
+	private void showNewGameDialog() {
+		NewGameDialogUiObjects dialogObjects = new NewGameDialogUiObjects();
+		initializeLoadPictureButton( dialogObjects.imageChooserButton, dialogObjects );
+		
+		Optional<ButtonType> dialogResult = mRenderer.drawNewGameDialog( dialogObjects, mUiObjects.root );
+		processNewGameDialogResult( dialogResult, dialogObjects );
+	}
+
+	private void initializeLoadPictureButton( Button button, NewGameDialogUiObjects uiObjects ) {
+		button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	final File imageFile = mRenderer.drawOpenFileDialog( 
+            		mUiObjects.root, 
+            		StringRepository.HEADING_IMAGE_FILE_DIALOG,  
+            		JavaFxUtils.getImageExtensionFilter( new FileExtension( StringRepository.IMG_FORMATS, StringRepository.IMG_FORMATS_EXT ) )
+            	);
+            
+                if ( imageFile != null && imageFile.canRead() ) {
+                    uiObjects.imageChosen.set(true);
+                    JavaFxUtils.setObjectLabel( uiObjects.imageChooserButton, imageFile.getName() );
+                    
+                    try {
+						mImagePathTemp = imageFile.toURI().toURL().toExternalForm();
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+                    
+                }
+            }
+        });
+	
+	}
+	
+	protected void processNewGameDialogResult( Optional<ButtonType> result, NewGameDialogUiObjects dialogObjects ) {
+		if ( result.isPresent() ) {
+			if ( result.get().getButtonData() == ButtonData.OK_DONE ) {
+				mCurrentGameProperties = getNewGameProperties( dialogObjects );
+				startNewGame( mCurrentGameProperties );
+			}
+			mImagePathTemp = null;
 		}
 	}
 	
-	private void showPlayScreen(){
+	protected NewGameProperties getNewGameProperties( NewGameDialogUiObjects dialogObjects ) {
+		NewGameProperties properties = new NewGameProperties();
+		properties.gameSize = (int)dialogObjects.gameSizeSlider.getValue();
+		properties.hasImageTiles = dialogObjects.imageTilesRB.isSelected();
+		properties.imagePath = mImagePathTemp;
+		return properties;
+	}
+
+	
+	//------------------------------------------------------------
+	// 	New Game
+	//------------------------------------------------------------
+	
+	protected void startNewGame( NewGameProperties properties ) {
 		try {
-			List<Tile> tiles = new ArrayList<>();
-			connectTiles(tiles);
-			mRenderer.loadGameWindow(tiles);
-			startClock();
-		} catch (UninitializedGameException | InvalidArgumentException e) {
+			mEngine = new Engine( properties.gameSize );
+			initializeGameScreen( properties );
+			initializeAndDrawTiles( properties );
+		}
+		catch ( InvalidArgumentException | UninitializedGameException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void startClock(){
-		mEngine.resumeTimeCounter();
-		timeCounter = new Timeline(new KeyFrame(Duration.millis(100), e -> {
-			mRenderer.updateTime(mEngine.getElapsedTime());
-		}));
-		timeCounter.setCycleCount(Timeline.INDEFINITE);
-		timeCounter.play();
+
+	protected void initializeGameScreen( NewGameProperties properties ) {
+		initializeGameWindow();
+		mRenderer.drawGameWindow( mUiObjects );
+		mGamePaused.set(false);
 	}
 	
-	private void stopClock(){
-		timeCounter.stop();
+	protected void initializeAndDrawTiles( NewGameProperties properties ) throws InvalidArgumentException, UninitializedGameException {
+		initializeTiles( properties );
+		mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
+	}
+	
+	protected void initializeGameWindow() {
+		initializeGamePane();
+		initializeBackToMenuButton();
+		initializeGameScreenLabels();
+	}
+	
+	protected void initializeGamePane() {
+		mUiObjects.gamePane = new GridPane();
+		mUiObjects.gamePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				int tileSize = NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH / mEngine.getGameData().getSize();
+				int row = (int)( event.getSceneY() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_Y )  / tileSize;
+				int col = (int)( event.getSceneX() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_X ) / tileSize;
+				
+				
+				GridPoint emptyTileOld = mEngine.getGameData().getEmptyTile();
+				if ( mEngine.move(row, col) ) {
+					GridPoint emptyTileNew = new GridPoint( row, col );
+					
+					mRenderer.onValidMove( mUiObjects, emptyTileOld, emptyTileNew );
+					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
+					
+					if ( mEngine.isFinished() ) {
+						endGame();
+					}
+				}
+			};
+		});
+	}
+	
+	protected void initializeBackToMenuButton() {
+		mUiObjects.returnToMenuButton = new Button();
+		mUiObjects.returnToMenuButton.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				pauseGame();
+			}
+		});
+	}
+	
+	protected void pauseGame() {
+		switchPausedState();
+		mGameElapsedTime.pause();
+		mRenderer.onReturnToMenu( mUiObjects );
+	}
+	
+	protected void initializeGameScreenLabels() {
+		mUiObjects.elapsedTimeLabel = new Label();
+		mUiObjects.moveCounterLabel = new Label();
+		mGameElapsedTime.start( NumericalRepository.GAME_STOPWATCH_DELAY_MS, this );
+	}
+	
+	public void updateUiTimer() {
+		String formattedTime = mGameElapsedTime.getElapsedSecondsFormatted();
+		mRenderer.updateGameTime( mUiObjects, formattedTime );
+	}
+	
+	protected void initializeTiles( NewGameProperties properties ) throws InvalidArgumentException, UninitializedGameException {
+		mUiObjects.gameTiles = new Tile[ properties.gameSize * properties.gameSize ];
+		int tileSize = NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH / properties.gameSize;
+		
+		if ( properties.hasImageTiles ) {
+			initializePictureTiles( properties, tileSize );
+		} else {
+			initializeNumberedTiles( properties, tileSize );
+		}
+		
+		mUiObjects.gameTiles[mUiObjects.gameTiles.length - 1].setToEmpty();
+	}
+	
+	protected void initializeNumberedTiles( NewGameProperties properties, int tileSize ) {
+		for ( int i = 0; i < properties.gameSize * properties.gameSize; i++ ) {
+			mUiObjects.gameTiles[i] = new NumberedTile(tileSize, tileSize, i+1);
+		}
+	}
+	
+	protected void initializePictureTiles( NewGameProperties properties, int tileSize ) throws InvalidArgumentException {
+		Image sourceImage = new Image( properties.imagePath );
+		
+		ImageSlicer slicer = new ImageSlicer();
+		sourceImage = slicer.getBiggestSquare( sourceImage, NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH );
+		Image[] tileImages = slicer.GetImageTiles( sourceImage, properties.gameSize );
+		
+		for ( int i = 0; i < tileImages.length; i++ ) {
+			mUiObjects.gameTiles[i] = new ImageTile( tileSize, tileSize, tileImages[i] );
+		}
+		
+		mRenderer.initializeEndGameAnimation( sourceImage );
+	}
+	
+	protected SimpleBooleanProperty getPausedProperty() {
+		return mGamePaused;
+	}
+	
+	protected void switchPausedState() {
+		mGamePaused.set( mGamePaused.not().get() );
+	}
+	
+	protected void endGame() {
+		mGameElapsedTime.pause();
+	
+		Optional<ButtonType> result = mRenderer.onGameWon( mUiObjects, mCurrentGameProperties.hasImageTiles );
+		
+		if ( ( result != null ) && result.isPresent() ) {
+			switch ( result.get().getText() ) {
+			case StringRepository.NEW_GAME:
+				showNewGameDialog();
+				break;
+			case StringRepository.MENU_LABEL:
+				mRenderer.drawMenu( mUiObjects );
+				break;
+			}
+		}
 	}
 }
