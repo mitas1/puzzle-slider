@@ -4,14 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
-import java.nio.ByteBuffer;
 import java.util.Optional;
 
 import Engine.Engine;
+import Engine.Globals.GridPoint;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UninitializedGameException;
 import Global.FileExtension;
@@ -313,8 +312,12 @@ public class PuzzleSlider extends Application {
 				int row = (int)( event.getSceneY() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_Y )  / tileSize;
 				int col = (int)( event.getSceneX() - NumericalRepository.LAYOUT_GAME_CANVAS_OFFSET_X ) / tileSize;
 				
+				
+				GridPoint emptyTileOld = mEngine.getGameData().getEmptyTile();
 				if ( mEngine.move(row, col) ) {
-					mRenderer.redrawTiles( mUiObjects, mEngine.getGameData().getTiles() );
+					GridPoint emptyTileNew = new GridPoint( row, col );
+					
+					mRenderer.onValidMove( mUiObjects, emptyTileOld, emptyTileNew );
 					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 					
 					if ( mEngine.isFinished() ) {
@@ -338,7 +341,7 @@ public class PuzzleSlider extends Application {
 	protected void pauseGame() {
 		switchPausedState();
 		mGameElapsedTime.pause();
-		mRenderer.drawMenu( mUiObjects );
+		mRenderer.onReturnToMenu( mUiObjects );
 	}
 	
 	protected void initializeGameScreenLabels() {
@@ -381,6 +384,8 @@ public class PuzzleSlider extends Application {
 		for ( int i = 0; i < tileImages.length; i++ ) {
 			mUiObjects.gameTiles[i] = new ImageTile( tileSize, tileSize, tileImages[i] );
 		}
+		
+		mRenderer.initializeEndGameAnimation( sourceImage );
 	}
 	
 	protected SimpleBooleanProperty getPausedProperty() {
@@ -394,9 +399,9 @@ public class PuzzleSlider extends Application {
 	protected void endGame() {
 		mGameElapsedTime.pause();
 	
-		Optional<ButtonType> result = mRenderer.drawWinDialog( mUiObjects.root );
+		Optional<ButtonType> result = mRenderer.onGameWon( mUiObjects, mCurrentGameProperties.hasImageTiles );
 		
-		if ( result.isPresent() ) {
+		if ( ( result != null ) && result.isPresent() ) {
 			switch ( result.get().getText() ) {
 			case StringRepository.NEW_GAME:
 				showNewGameDialog();
@@ -407,5 +412,4 @@ public class PuzzleSlider extends Application {
 			}
 		}
 	}
-	
 }
