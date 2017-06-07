@@ -4,3 +4,4 @@ PuzzleSlider/bin
 .idea/
 *.eml
 *.iml
+*.DS_Store

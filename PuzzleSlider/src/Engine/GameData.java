@@ -1,12 +1,10 @@
 package Engine;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -15,11 +13,11 @@ import Engine.Globals.GridPoint;
 import ExceptionHandling.ExceptionMessages;
 import ExceptionHandling.InvalidArgumentException;
 import ExceptionHandling.UninitializedGameException;
+import Global.NumericalRepository;
 
 public class GameData implements Serializable {
 
 	private static final long serialVersionUID = 854452780857028700L;
-	private final long BILLION = 1000000000;
 	
 	protected int[][] mTiles;
 	protected GridPoint mBlankSpot;
@@ -29,11 +27,9 @@ public class GameData implements Serializable {
 	protected int mCorrectTiles;
 	
 	protected int mMoveCount;
-	protected long mStartTime;
-	protected long mTimeCount;
 	
 	public GameData( int size ) throws InvalidArgumentException {
-		if (size < 4) {
+		if ( size < NumericalRepository.GAME_SIZE_MIN ) {
 			throw new InvalidArgumentException( ExceptionMessages.GameDimensions( size ) );
 		}
 		
@@ -54,8 +50,6 @@ public class GameData implements Serializable {
 		}
 		out.append("Moves: " + mMoveCount);
 		out.append(System.lineSeparator());
-		out.append("Time: " + mTimeCount + " seconds");
-		out.append(System.lineSeparator());
 		return out.toString();
 	}
 	
@@ -75,8 +69,6 @@ public class GameData implements Serializable {
 	
 	public void initCounters(){
 		mMoveCount = 0;
-		mTimeCount = 0;
-		mStartTime = getTimeInSeconds();
 	}
 	
 	protected boolean checkValidPoint( GridPoint point ) {
@@ -134,17 +126,16 @@ public class GameData implements Serializable {
 		return mTiles[coords.row][coords.column];
 	}
 	
-	public void saveDataToFile(File file) throws FileNotFoundException, IOException{
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
+	public void saveDataToFile( OutputStream stream ) throws IOException {
+		ObjectOutputStream os = new ObjectOutputStream( stream );
 		os.writeObject(this);
 		os.close();
 	}
 	
-	public GameData loadDataFromFile(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
-		ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
+	public GameData loadDataFromFile( InputStream stream ) throws IOException, ClassNotFoundException {
+		ObjectInputStream is = new ObjectInputStream( stream );
 		GameData loadedData =  (GameData) is.readObject();
 		is.close();
-		loadedData.mStartTime = getTimeInSeconds();
 		return loadedData;
 	}
 	
@@ -168,20 +159,6 @@ public class GameData implements Serializable {
 		mMoveCount++;
 	}
 	
-	public void updateTimeCount(){
-		long currentTime = getTimeInSeconds();
-		mTimeCount += currentTime - mStartTime;
-		mStartTime = currentTime;
-	}
-	
-	public long getStartTime(){
-		return mStartTime;
-	}
-	
-	protected long getTimeInSeconds(){
-		return System.nanoTime() / BILLION;
-	}
-	
 	protected void checkFinished() {
 		if ( mCorrectTiles == (mSize * mSize - 1) ) {
 			mState = GameState.FINISHED;
@@ -195,14 +172,5 @@ public class GameData implements Serializable {
 	
 	public boolean inProgress(){
 		return mState == GameState.IN_PROGRESS;
-	}
-
-	public long getTimeCount() {
-		updateTimeCount();
-		return mTimeCount;
-	}
-	
-	public void setStartTime(){
-		mStartTime = getTimeInSeconds();
 	}
 }
