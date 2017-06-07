@@ -15,7 +15,14 @@
 
 .time-label {
     -fx-font-family: 'Permanent Marker';
-    -fx-font-size: 52px;
+    -fx-font-size: 45px;
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
+}
+
+.moves-label {
+	-fx-font-family: 'Permanent Marker';
+    -fx-font-size: 45px;
     -fx-text-fill: #fff;
     -fx-background-color: transparent;
 }
