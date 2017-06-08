@@ -26,12 +26,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 public class Renderer extends Pane {
     
     protected Pane mRootPane;
     protected AnimationEngine mAnimationEngine;
+    protected ScreenDrag mScreenDragger;
     
     public Renderer() {
     	Font.loadFont(Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(), 10);
@@ -47,6 +50,7 @@ public class Renderer extends Pane {
     	
     	rootScene.getStylesheets().add(getClass().getResource("GUI_styles.css").toExternalForm());
     	
+    	uiObjects.root.initStyle( StageStyle.UNDECORATED );
     	uiObjects.root.setScene( rootScene );
     	uiObjects.root.show();
     	
@@ -63,11 +67,15 @@ public class Renderer extends Pane {
     public Optional<ButtonType> drawNewGameDialog( NewGameDialogUiObjects dialogUiObjects, Window parent ) {
     	Dialog<ButtonType> newGameDialog = new Dialog<>();
     	newGameDialog.initOwner( parent );
+    	// newGameDialog.initStyle( StageStyle.TRANSPARENT );
         newGameDialog.setResizable(true);
         newGameDialog.setTitle( StringRepository.HEADING_NEW_GAME_DIALOG );
         
     	NewGameDialogLayout layout = new NewGameDialogLayout();
     	layout.setLayout( dialogUiObjects, newGameDialog );
+    	
+    	// OpacityChangeAnimation animation = OpacityChangeAnimation.getNodeAppearAnimation(5000);
+    	// animation.play( newGameDialog.getDialogPane(), null );
     	
     	return newGameDialog.showAndWait();
     }
@@ -222,5 +230,18 @@ public class Renderer extends Pane {
     
     public void initializeEndGameAnimation( Image sourceImage ) {
     	mAnimationEngine.createEngGameImageAnimation( sourceImage );
+    }
+    
+    
+    public void startScreenDrag( Stage screenStage, double mouseX, double mouseY ) {
+    	mScreenDragger = new ScreenDrag( screenStage, mouseX, mouseY );
+    }
+    
+    public void dragScreen( double mouseX, double mouseY ) {
+    	mScreenDragger.drag( mouseX, mouseY );
+    }
+    
+    public void stopScreenDrag() {
+    	mScreenDragger = null;
     }
 }
