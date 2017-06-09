@@ -358,6 +358,7 @@ public class PuzzleSlider extends Application {
 				if ( mEngine.move(row, col) ) {
 					GridPoint emptyTileNew = new GridPoint( row, col );
 					
+			    	SimpleSound.playSlideSound();
 					mRenderer.onValidMove( mUiObjects, emptyTileOld, emptyTileNew );
 					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 					

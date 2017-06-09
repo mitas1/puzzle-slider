@@ -178,7 +178,6 @@ public class Renderer extends Pane {
     	mAnimationEngine.setOverlayParent( mRootPane );
     	mAnimationEngine.playTileSlide( tile, emptyPos.getLayoutX(), emptyPos.getLayoutY(), onFinishedAnimation );
     	
-    	SimpleSound.playSlideSound();
     }
     
     protected Node getTileOnGrid( GridPane grid, GridPoint gridPt ) {
