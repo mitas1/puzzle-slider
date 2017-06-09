@@ -6,12 +6,16 @@ import java.util.Optional;
 import Engine.Globals.GridPoint;
 import Global.ExternalResources;
 import Global.NumericalRepository;
+import Global.SoundRepository;
 import Global.StringRepository;
 import Layouts.GameScreenLayout;
 import Layouts.MainMenuLayout;
 import Layouts.NewGameDialogLayout;
 import Layouts.ScreenLayout;
 import Layouts.WinDialogLayout;
+import Sound.LoopSound;
+import Sound.SimpleSound;
+import Sound.Sound;
 import UiObjects.GlobalUiObjects;
 import UiObjects.NewGameDialogUiObjects;
 import javafx.event.ActionEvent;
@@ -173,6 +177,7 @@ public class Renderer extends Pane {
     	
     	mAnimationEngine.setOverlayParent( mRootPane );
     	mAnimationEngine.playTileSlide( tile, emptyPos.getLayoutX(), emptyPos.getLayoutY(), onFinishedAnimation );
+    	
     }
     
     protected Node getTileOnGrid( GridPane grid, GridPoint gridPt ) {
