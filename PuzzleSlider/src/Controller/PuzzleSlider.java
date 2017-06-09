@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -64,6 +65,8 @@ public class PuzzleSlider extends Application {
 		mUiObjects.root = primaryStage;
 		drawRootWindow();
 		
+		setWindowDragHandlers();
+		
 		initializeMenu( primaryStage );
 		drawMenu();
 	}
@@ -77,6 +80,35 @@ public class PuzzleSlider extends Application {
 		mUiObjects = new GlobalUiObjects();
 		mGameElapsedTime = new Stopwatch();
 		mGamePaused = new SimpleBooleanProperty(false);
+	}
+	
+	protected void setWindowDragHandlers() {
+		Scene rootScene = mUiObjects.root.getScene();
+		
+		rootScene.setOnMousePressed(
+			new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					mRenderer.startScreenDrag( mUiObjects.root, event.getScreenX(), event.getScreenY() );
+				};
+			}
+		);
+		
+		rootScene.setOnMouseDragged( 
+			new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					mRenderer.dragScreen( event.getScreenX(), event.getScreenY() );
+				};
+			}
+		);
+		
+		rootScene.setOnMouseReleased( new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				mRenderer.stopScreenDrag();
+			}
+		});
 	}
 	
 	private void drawRootWindow() {
