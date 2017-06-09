@@ -8,4 +8,6 @@ public class ExternalResources {
 
 	public static final String PATH_IMAGE_FOLDER = "/resources/images/";
 	
+	public static final String PATH_SOUNDS_FOLDER = "resources/sounds/";
+	
 }

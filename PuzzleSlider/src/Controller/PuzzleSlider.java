@@ -19,6 +19,8 @@ import Global.StringRepository;
 import ImageProcessing.ImageSlicer;
 import Renderer.JavaFxUtils;
 import Renderer.Renderer;
+import Sound.LoopSound;
+import Sound.SimpleSound;
 import Tiles.ImageTile;
 import Tiles.NumberedTile;
 import Tiles.Tile;
@@ -80,6 +82,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects = new GlobalUiObjects();
 		mGameElapsedTime = new Stopwatch();
 		mGamePaused = new SimpleBooleanProperty(false);
+		LoopSound.playBackgroundMusic();
 	}
 	
 	protected void setWindowDragHandlers() {
@@ -136,6 +139,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects.newGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				SimpleSound.playButtonSound();
 				showNewGameDialog();
 			}
 		});
@@ -147,6 +151,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects.resumeGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				SimpleSound.playButtonSound();
 				resumeGame();
 			}
 		});
@@ -166,6 +171,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects.saveGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				SimpleSound.playButtonSound();
 				saveGame();
 			}
 		});
@@ -200,6 +206,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects.loadGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				SimpleSound.playButtonSound();
 				loadGame();
 			}
 		});
@@ -262,6 +269,7 @@ public class PuzzleSlider extends Application {
 		button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	SimpleSound.playButtonSound();
             	final File imageFile = mRenderer.drawOpenFileDialog( 
             		mUiObjects.root, 
             		StringRepository.HEADING_IMAGE_FILE_DIALOG,  
@@ -286,6 +294,7 @@ public class PuzzleSlider extends Application {
 	
 	protected void processNewGameDialogResult( Optional<ButtonType> result, NewGameDialogUiObjects dialogObjects ) {
 		if ( result.isPresent() ) {
+			SimpleSound.playButtonSound();
 			if ( result.get().getButtonData() == ButtonData.OK_DONE ) {
 				mCurrentGameProperties = getNewGameProperties( dialogObjects );
 				startNewGame( mCurrentGameProperties );
@@ -353,6 +362,7 @@ public class PuzzleSlider extends Application {
 					mRenderer.updateMoveCount( mUiObjects, mEngine.getGameData().getMoveCount() );
 					
 					if ( mEngine.isFinished() ) {
+						SimpleSound.playVictorySound();
 						endGame();
 					}
 				}
@@ -365,6 +375,7 @@ public class PuzzleSlider extends Application {
 		mUiObjects.returnToMenuButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				SimpleSound.playButtonSound();
 				pauseGame();
 			}
 		});
@@ -430,10 +441,12 @@ public class PuzzleSlider extends Application {
 	
 	protected void endGame() {
 		mGameElapsedTime.pause();
-	
+		
 		Optional<ButtonType> result = mRenderer.onGameWon( mUiObjects, mCurrentGameProperties.hasImageTiles );
 		
+		
 		if ( ( result != null ) && result.isPresent() ) {
+			SimpleSound.playButtonSound();
 			switch ( result.get().getText() ) {
 			case StringRepository.NEW_GAME:
 				showNewGameDialog();
