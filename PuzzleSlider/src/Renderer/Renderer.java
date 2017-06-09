@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Optional;
 
 import Engine.Globals.GridPoint;
+import Global.ExternalResources;
 import Global.NumericalRepository;
 import Global.StringRepository;
 import Layouts.GameScreenLayout;
@@ -34,7 +35,7 @@ public class Renderer extends Pane {
     protected AnimationEngine mAnimationEngine;
     
     public Renderer() {
-    	Font.loadFont(Renderer.class.getResource("/resources/fonts/PermanentMarker.ttf").toExternalForm(), 10);
+    	Font.loadFont( getClass().getResource( ExternalResources.PATH_FONT_FANCY ).toExternalForm() , 10);
     }
     
     public void drawRootWindow( GlobalUiObjects uiObjects ) {
@@ -45,7 +46,7 @@ public class Renderer extends Pane {
     			NumericalRepository.LAYOUT_GAME_WINDOW_HEIGHT 
     	);
     	
-    	rootScene.getStylesheets().add(getClass().getResource("GUI_styles.css").toExternalForm());
+    	rootScene.getStylesheets().add( getClass().getResource(ExternalResources.PATH_CSS_FILE).toExternalForm() );
     	
     	uiObjects.root.setScene( rootScene );
     	uiObjects.root.show();
