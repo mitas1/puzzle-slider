@@ -13,16 +13,14 @@
     -fx-text-fill: #991c10;
 }
 
-.time-label {
+.time-label, .move-counter-label {
     -fx-font-family: 'Permanent Marker';
     -fx-font-size: 45px;
     -fx-text-fill: #fff;
     -fx-background-color: transparent;
 }
 
-.moves-label {
-	-fx-font-family: 'Permanent Marker';
-    -fx-font-size: 45px;
-    -fx-text-fill: #fff;
-    -fx-background-color: transparent;
+.control-button .text, .time-label .text, .move-counter-label .text {
+    -fx-stroke: #000;
+    -fx-stroke-width: 2px;
 }
