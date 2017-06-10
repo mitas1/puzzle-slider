@@ -81,6 +81,5 @@ public class GameScreenLayout extends ScreenLayout {
 		uiObjects.gamePane.setPrefSize( NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH, NumericalRepository.LAYOUT_GAME_CANVAS_HEIGHT );
 		uiObjects.gamePane.setMaxSize( NumericalRepository.LAYOUT_GAME_CANVAS_WIDTH, NumericalRepository.LAYOUT_GAME_CANVAS_HEIGHT );
 		uiObjects.gamePane.setAlignment( Pos.CENTER );
-		uiObjects.gamePane.setBackground( new Background( new BackgroundFill( Paint.valueOf("0x000000"), null, null)));
 	}
 }

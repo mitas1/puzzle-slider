@@ -24,3 +24,31 @@
     -fx-stroke: #000;
     -fx-stroke-width: 2px;
 }
+
+.exit-button {
+    -fx-font-size: 65px;
+}
+
+.rectangle {
+    -fx-fill: rgba(255,255,255, 0.1);
+    -fx-stroke: rgba(255,255,255, 0.4);
+}
+
+.rectangle:hover {
+    -fx-fill: rgba(255,255,255, 0.2);
+    -fx-stroke: rgba(255,255,255, 1);
+}
+
+.empty-rectangle {
+    -fx-fill: transparent;
+}
+
+.number-label {
+    -fx-text-fill: #fff;
+    -fx-background-color: transparent;
+}
+
+.number-label .text{
+    -fx-stroke: #000;
+    -fx-stroke-width: 2px;
+}

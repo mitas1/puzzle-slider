@@ -33,7 +33,12 @@ public class StringRepository {
 	public static final String LABEL_SAVELOAD_DIALOG_HEADER = "Choose a save file";
 	
 	public static final String CSS_CLASS_CONTROL_BUTTON = "control-button";
+	public static final String CSS_CLASS_EXIT_BUTTON = "exit-button";
 	public static final String CSS_CLASS_TIMER = "time-label";
 	public static final String CSS_CLASS_MOVE_COUNTER = "move-counter-label";
+
+	public static final String CSS_CLASS_RECTANGLE = "rectangle";
+	public static final String CSS_CLASS_EMPTY_RECTANGLE = "empty-rectangle";
+	public static final String CSS_CLASS_NUMBER_LABEL = "number-label";
 
 }

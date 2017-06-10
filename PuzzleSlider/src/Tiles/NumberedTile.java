@@ -1,9 +1,11 @@
 package Tiles;
 
+import Global.StringRepository;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -29,25 +31,23 @@ public class NumberedTile extends Tile {
 	@Override
 	public void setToEmpty() {
 		Rectangle empty = new Rectangle(mWidth, mHeight);
-		empty.setFill( Paint.valueOf( "0x000000" ) );
+		empty.getStyleClass().add( StringRepository.CSS_CLASS_EMPTY_RECTANGLE );
 		mJavaFxObject = empty;
 		mNumber = 0;
 	}
 	
 	protected void buildJavaFxObject() {
-		// TODO: work on this
 		
 		StackPane base = new StackPane();
 		
 		Rectangle rectangle = new Rectangle( mWidth, mHeight );
-		rectangle.setFill( Paint.valueOf( "0x000000" ) );
-		
+		rectangle.getStyleClass().add( StringRepository.CSS_CLASS_RECTANGLE );
+
 		Label numberLabel = new Label( String.format( "%d", mNumber) );
+		numberLabel.getStyleClass().add( StringRepository.CSS_CLASS_NUMBER_LABEL );
 		numberLabel.setFont( new Font( "Permanent Marker", mWidth * FONT_SCALE_SWEETSPOT ) );
-		numberLabel.setTextFill( Paint.valueOf( "0xFFFFFF" ) );
-		numberLabel.setAlignment( Pos.CENTER );
-		
-		base.getChildren().addAll( rectangle, numberLabel );
+
+		base.getChildren().addAll( numberLabel, rectangle);
 		
 		mJavaFxObject = base;
 	}
