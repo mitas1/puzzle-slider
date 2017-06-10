@@ -38,6 +38,7 @@ public class StringRepository {
 	public static final String CSS_CLASS_MOVE_COUNTER = "move-counter-label";
 
 	public static final String CSS_CLASS_RECTANGLE = "rectangle";
+	public static final String CSS_CLASS_EMPTY_RECTANGLE = "empty-rectangle";
 	public static final String CSS_CLASS_NUMBER_LABEL = "number-label";
 
 }

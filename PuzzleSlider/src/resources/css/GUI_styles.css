@@ -39,6 +39,10 @@
     -fx-stroke: rgba(255,255,255, 1);
 }
 
+.empty-rectangle {
+    -fx-fill: transparent;
+}
+
 .number-label {
     -fx-text-fill: #fff;
     -fx-background-color: transparent;

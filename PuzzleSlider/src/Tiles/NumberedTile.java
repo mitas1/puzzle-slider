@@ -31,7 +31,7 @@ public class NumberedTile extends Tile {
 	@Override
 	public void setToEmpty() {
 		Rectangle empty = new Rectangle(mWidth, mHeight);
-		empty.setFill(Color.TRANSPARENT);
+		empty.getStyleClass().add( StringRepository.CSS_CLASS_EMPTY_RECTANGLE );
 		mJavaFxObject = empty;
 		mNumber = 0;
 	}
