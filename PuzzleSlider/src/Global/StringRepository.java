@@ -34,7 +34,6 @@ public class StringRepository {
 	
 	public static final String CSS_CLASS_CONTROL_BUTTON = "control-button";
 	public static final String CSS_CLASS_TIMER = "time-label";
-	
-	
-	
+	public static final String CSS_CLASS_MOVE_COUNTER = "move-counter-label";
+
 }

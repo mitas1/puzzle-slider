@@ -40,7 +40,7 @@ public class GameScreenLayout extends ScreenLayout {
 	protected void setStyles(GlobalUiObjects uiObjects) {
 		uiObjects.elapsedTimeLabel.getStyleClass().add(StringRepository.CSS_CLASS_TIMER);
 		uiObjects.returnToMenuButton.getStyleClass().add(StringRepository.CSS_CLASS_CONTROL_BUTTON);
-		// TODO: add CSS class to move counter !
+		uiObjects.moveCounterLabel.getStyleClass().add(StringRepository.CSS_CLASS_MOVE_COUNTER);
 	}
 
 	@Override
