@@ -38,7 +38,7 @@ public class MainMenuLayout extends ScreenLayout {
 		JavaFxUtils.setObjectsPosition( uiObjects.newGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 170 );
 		JavaFxUtils.setObjectsPosition( uiObjects.saveGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 260 );
 		JavaFxUtils.setObjectsPosition( uiObjects.loadGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 350 );
-		JavaFxUtils.setObjectsPosition( uiObjects.exitButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 480 );
+		JavaFxUtils.setObjectsPosition( uiObjects.exitButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X + 70, 470 );
 	}
 	
 	@Override
@@ -47,7 +47,10 @@ public class MainMenuLayout extends ScreenLayout {
         uiObjects.newGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
         uiObjects.saveGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
         uiObjects.loadGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
-        uiObjects.exitButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
+        uiObjects.exitButton.getStyleClass().addAll(
+				StringRepository.CSS_CLASS_CONTROL_BUTTON ,
+				StringRepository.CSS_CLASS_EXIT_BUTTON
+		);
 	}
 
 	@Override
