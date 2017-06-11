@@ -32,7 +32,9 @@ public class GameData implements Serializable {
 		if ( size < NumericalRepository.GAME_SIZE_MIN ) {
 			throw new InvalidArgumentException( ExceptionMessages.GameDimensions( size ) );
 		}
-		
+		else if (size > NumericalRepository.GAME_SIZE_MAX) {
+			throw new InvalidArgumentException( ExceptionMessages.GameDimensions( size ) );
+		}
 		mState = GameState.UNINITIALIZED;
 		mSize = size;
 	}
