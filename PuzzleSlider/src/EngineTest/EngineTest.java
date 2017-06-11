@@ -35,15 +35,23 @@ public class EngineTest{
 
 	@Test(expected = InvalidArgumentException.class) 
 	public void invalidConvstructorTest() throws InvalidArgumentException{
-		Engine engine = new Engine(3);
-		engine = new Engine(-1);
-		engine = new Engine(10000);
+		new Engine(3);
+	}
+	
+	@Test(expected = InvalidArgumentException.class) 
+	public void invalidConvstructorTest2() throws InvalidArgumentException{
+		new Engine(-1);
+	}
+	
+	@Test(expected = InvalidArgumentException.class) 
+	public void invalidConvstructorTest3() throws InvalidArgumentException{
+		 new Engine(1000);
 	}
 	
 	@Test
 	public void validConvstructorTest() throws InvalidArgumentException{
 		for (int i = NumericalRepository.GAME_SIZE_MIN; i < NumericalRepository.GAME_SIZE_MAX;i++){
-			Engine engine = new Engine(i);
+			new Engine(i);
 		}
 	}
 	
@@ -119,8 +127,11 @@ public class EngineTest{
 		assertTrue(engine.moveOverride(new GridPoint(3, 4)));
 		assertEquals(0, engine.getGameData().getTile(new GridPoint(3,4)));
 		assertEquals(20, engine.getGameData().getTile(new GridPoint(4,4)));
-		
-		engine = new EngineOverride();
+	}
+	
+	@Test
+	public void ValidMoveWithCheck2() throws InvalidArgumentException, UninitializedGameException{
+		EngineOverride engine = new EngineOverride();
 		assertTrue(engine.moveOverride(3,4));
 		assertEquals(0, engine.getGameData().getTile(new GridPoint(3,4)));
 		assertEquals(20, engine.getGameData().getTile(new GridPoint(4,4)));
@@ -130,8 +141,11 @@ public class EngineTest{
 	public void InvalidMoveOnGrid() throws InvalidArgumentException{
 		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(new GridPoint(1, 0)));
-		
-		engine = new EngineOverride();
+	}
+	
+	@Test
+	public void InvalidMoveOnGrid2() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(1,0));
 		assertFalse(engine.moveOverride(1,1));
 		assertFalse(engine.moveOverride(2,1));
@@ -143,8 +157,11 @@ public class EngineTest{
 		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(new GridPoint(3, 3)));
 		assertFalse(engine.moveOverride(new GridPoint(4, 4)));
-		
-		engine = new EngineOverride();
+	}
+	
+	@Test
+	public void InvalidMoveDiagonal2() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(3,3));
 		assertFalse(engine.moveOverride(4,4));
 	}
@@ -152,12 +169,15 @@ public class EngineTest{
 	@Test
 	public void InvalidMoveToEmpty() throws InvalidArgumentException{
 		EngineOverride engine = new EngineOverride();
-		assertFalse(engine.moveOverride(new GridPoint(4, 4)));
-		assertFalse(engine.moveOverride(new GridPoint(2, 2)));
-		
-		engine = new EngineOverride();
 		assertFalse(engine.moveOverride(4, 4));
 		assertFalse(engine.moveOverride(2, 2));
+	}
+	
+	@Test
+	public void InvalidMoveToEmpty2() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(4, 4)));
+		assertFalse(engine.moveOverride(new GridPoint(2, 2)));
 	}
 	
 	@Test
@@ -165,8 +185,11 @@ public class EngineTest{
 		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(new GridPoint(4, 5)));
 		assertFalse(engine.moveOverride(new GridPoint(5, 4)));
-		
-		engine = new EngineOverride();
+	}
+	
+	@Test
+	public void InvalidMoveAdjacentNotOnGrid2() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(5,4));
 		assertFalse(engine.moveOverride(4,5));
 	}
@@ -175,23 +198,28 @@ public class EngineTest{
 	public void InvalidMoveNotOnGrid() throws InvalidArgumentException{
 		EngineOverride engine = new EngineOverride();
 		assertFalse(engine.moveOverride(new GridPoint(12, 3)));
-		
-		engine = new EngineOverride();
-		for (int i = NumericalRepository.GAME_SIZE_MAX; i < 100;i++){
-			assertFalse(engine.moveOverride(i, 3));
-		}
-		
+
 	}
 	
 	@Test
 	public void InvalidMoveNotOnGrid2() throws InvalidArgumentException{
 		EngineOverride engine = new EngineOverride();
-		assertFalse(engine.moveOverride(new GridPoint(12, -47)));
-		
-		engine = new EngineOverride();
-		for (int i = -100; i < NumericalRepository.GAME_SIZE_MIN;i++){
-			assertFalse(engine.moveOverride(new GridPoint(12, -47)));
+		for (int i = NumericalRepository.GAME_SIZE_MAX; i < 100;i++){
+			assertFalse(engine.moveOverride(i, 3));
 		}
 	}
 	
+	@Test
+	public void InvalidMoveNotOnGrid3() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		assertFalse(engine.moveOverride(new GridPoint(12, -47)));
+	}
+	
+	@Test
+	public void InvalidMoveNotOnGrid4() throws InvalidArgumentException{
+		EngineOverride engine = new EngineOverride();
+		for (int i = -100; i < NumericalRepository.GAME_SIZE_MIN;i++){
+			assertFalse(engine.moveOverride(new GridPoint(12, i)));
+		}
+	}	
 }
