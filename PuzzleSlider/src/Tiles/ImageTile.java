@@ -1,5 +1,6 @@
 package Tiles;
 
+import Global.StringRepository;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,7 @@ public class ImageTile extends Tile {
 	@Override
 	public void setToEmpty() {
 		mTileView = new Rectangle(mWidth, mHeight);
+		mTileView.getStyleClass().add( StringRepository.CSS_CLASS_EMPTY_RECTANGLE );
 	}
 
 }
