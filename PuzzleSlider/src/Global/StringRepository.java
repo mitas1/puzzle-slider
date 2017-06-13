@@ -2,7 +2,7 @@ package Global;
 
 public class StringRepository {
 
-	public static final String NEW_GAME = "New game";
+	public static final String NEW_GAME = "New\n  game";
 	public static final String RESUME_GAME = "Resume game";
 	public static final String EXIT_GAME = "Exit";
 	public static final String SAVE_GAME = "Save game";
@@ -33,7 +33,7 @@ public class StringRepository {
 	public static final String LABEL_SAVELOAD_DIALOG_HEADER = "Choose a save file";
 	
 	public static final String CSS_CLASS_CONTROL_BUTTON = "control-button";
-	public static final String CSS_CLASS_EXIT_BUTTON = "exit-button";
+	public static final String CSS_CLASS_NEW_GAME_BUTTON = "new-game-button";
 	public static final String CSS_CLASS_TIMER = "time-label";
 	public static final String CSS_CLASS_MOVE_COUNTER = "move-counter-label";
 

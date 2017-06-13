@@ -34,29 +34,29 @@ public class MainMenuLayout extends ScreenLayout {
 
 	@Override
 	protected void setPositions( GlobalUiObjects uiObjects ) {
-		JavaFxUtils.setObjectsPosition( uiObjects.resumeGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 80 );
-		JavaFxUtils.setObjectsPosition( uiObjects.newGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 170 );
-		JavaFxUtils.setObjectsPosition( uiObjects.saveGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 260 );
-		JavaFxUtils.setObjectsPosition( uiObjects.loadGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 350 );
-		JavaFxUtils.setObjectsPosition( uiObjects.exitButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X + 70, 470 );
+		JavaFxUtils.setObjectsPosition( uiObjects.resumeGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X - 5, 55 );
+		JavaFxUtils.setObjectsPosition( uiObjects.newGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X, 110 );
+		JavaFxUtils.setObjectsPosition( uiObjects.saveGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X + 20, 375 );
+		JavaFxUtils.setObjectsPosition( uiObjects.loadGameButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X + 30, 470 );
+		JavaFxUtils.setObjectsPosition( uiObjects.exitButton, NumericalRepository.LAYOUT_MENU_BUTTON_OFFSET_X + 110, 550 );
 	}
 	
 	@Override
 	protected void setStyles( GlobalUiObjects uiObjects ) {
 		uiObjects.resumeGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
-        uiObjects.newGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
+        uiObjects.newGameButton.getStyleClass().addAll(
+        		StringRepository.CSS_CLASS_CONTROL_BUTTON,
+				StringRepository.CSS_CLASS_NEW_GAME_BUTTON
+		);
         uiObjects.saveGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
         uiObjects.loadGameButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
-        uiObjects.exitButton.getStyleClass().addAll(
-				StringRepository.CSS_CLASS_CONTROL_BUTTON ,
-				StringRepository.CSS_CLASS_EXIT_BUTTON
-		);
+        uiObjects.exitButton.getStyleClass().add( StringRepository.CSS_CLASS_CONTROL_BUTTON );
 	}
 
 	@Override
 	protected void setVisible( GlobalUiObjects uiObjects, ObservableList<Node> rootChildren ) {
-		rootChildren.addAll( 
-				uiObjects.resumeGameButton, uiObjects.newGameButton, uiObjects.saveGameButton,
+		rootChildren.addAll(
+				uiObjects.newGameButton, uiObjects.resumeGameButton, uiObjects.saveGameButton,
 				uiObjects.loadGameButton, uiObjects.exitButton 
 				);
 	}

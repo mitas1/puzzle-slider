@@ -5,6 +5,7 @@
 .control-button {
     -fx-font-family: 'Permanent Marker';
     -fx-font-size: 52px;
+    -fx-line-spacing: -65px;
     -fx-text-fill: #fff;
     -fx-background-color: transparent;
 }
@@ -15,7 +16,7 @@
 
 .time-label, .move-counter-label {
     -fx-font-family: 'Permanent Marker';
-    -fx-font-size: 45px;
+    -fx-font-size: 65px;
     -fx-text-fill: #fff;
     -fx-background-color: transparent;
 }
@@ -25,8 +26,8 @@
     -fx-stroke-width: 2px;
 }
 
-.exit-button {
-    -fx-font-size: 65px;
+.new-game-button {
+    -fx-font-size: 85px;
 }
 
 .rectangle {
