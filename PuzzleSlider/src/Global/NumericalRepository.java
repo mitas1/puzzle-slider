@@ -10,11 +10,11 @@ public class NumericalRepository {
 	public static final int LAYOUT_GAME_CANVAS_OFFSET_X = 398;
 	public static final int LAYOUT_GAME_CANVAS_OFFSET_Y = 131;
 	public static final int LAYOUT_GAME_TIME_ELAPSED_OFFSET_X = 60;
-	public static final int LAYOUT_GAME_TIME_ELAPSED_OFFSET_Y = 45;
+	public static final int LAYOUT_GAME_TIME_ELAPSED_OFFSET_Y = 65;
 	public static final int LAYOUT_GAME_MOVE_COUNT_OFFSET_X = 120;
-	public static final int LAYOUT_GAME_MOVE_COUNT_OFFSET_Y = 225;
+	public static final int LAYOUT_GAME_MOVE_COUNT_OFFSET_Y = 235;
 	public static final int LAYOUT_GAME_MENU_BTN_OFFSET_X = 45;
-	public static final int LAYOUT_GAME_MENU_BTN_OFFSET_Y = 365;
+	public static final int LAYOUT_GAME_MENU_BTN_OFFSET_Y = 375;
 	
 	public static final int LAYOUT_MENU_BUTTON_OFFSET_X = 590;
 	
