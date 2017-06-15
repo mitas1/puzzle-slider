@@ -10,4 +10,4 @@ Tento projekt je súčasťou predmetu extrémne programovanie na FMFI UK.
 
 ## Autori
 
-Samuel Mitas, Alexander Szendy, Filip Kováč, Martin Somodi, Tomáš Bakoš, Matúš Kováč
+Samuel Mitas, Alexander Szendy, Filip Kováč, Martin Šomodi, Tomáš Bakoš, Matúš Kováč
