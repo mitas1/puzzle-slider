@@ -123,7 +123,7 @@ public class PuzzleSlider extends Application {
 	//------------------------------------------------------------
 	
 	private void initializeMenu( Stage root ) {
-		initialzieNewGameButton();
+		initializeNewGameButton();
 		initializeResumeGameButton();
 		initializeSaveGameButton();
 		initializeLoadGameButton();
@@ -134,7 +134,7 @@ public class PuzzleSlider extends Application {
 		mRenderer.drawMenu( mUiObjects );
 	}
 
-	private void initialzieNewGameButton() {
+	private void initializeNewGameButton() {
 		mUiObjects.newGameButton = new Button();
 		mUiObjects.newGameButton.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
