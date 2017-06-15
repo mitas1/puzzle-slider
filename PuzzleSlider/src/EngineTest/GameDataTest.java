@@ -38,13 +38,15 @@ public class GameDataTest {
 		GameData gameData = new GameData(3);
 	}
 	
+	@Test( expected = InvalidArgumentException.class )
+	public void invalidConstructorTestBigDimensions() throws InvalidArgumentException {
+		GameData gameData = new GameData(15);
+	}
+	
 	@Test
 	public void validContstructorTest() throws InvalidArgumentException{
 		GameData gameData = new GameData(4);
 		assertEquals(4, gameData.getSize());
-		gameData = new GameData(15);
-		assertEquals(15, gameData.getSize());
-		assertEquals("GAME NOT INITIALIZED", gameData.toString());
 	}
 	
 	
